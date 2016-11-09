@@ -19,7 +19,7 @@ Summary screen of to display original purchase value of portfolio and current va
 ## Screens
 ### I. Splash screen at start up (Navigate - none automatically at start)
 A. Photo
-### II. Main Drop down menu (Drop down menu from )
+### II. Main Drop down menu (Drop down menu from all screens)
 A. Save A stock trading Idea
 
 B. List of Past Stock Trading Ideas
