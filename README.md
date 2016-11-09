@@ -36,7 +36,8 @@ D. GPS coordinates of the place where standing whenever the idea was created
 
 E. Input photo taken of Place
 
-6. Name of Idea field
+F. Name of Idea field
+
 ###IV) List of Past Stock Trading Ideas screen(Navigate from "B." in "III. Save A stock trading Idea")
 A. Scrollable list that could be sorted by date/time or stock symbol
 
