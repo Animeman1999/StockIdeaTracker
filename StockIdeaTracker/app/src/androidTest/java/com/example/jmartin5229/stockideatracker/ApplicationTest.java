@@ -1,4 +1,4 @@
-package edu.kvcc.cis298.chad.jeff.stockideatracker;
+package com.example.jmartin5229.stockideatracker;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
