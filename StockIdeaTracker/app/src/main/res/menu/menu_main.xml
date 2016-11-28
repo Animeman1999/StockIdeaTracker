@@ -3,8 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.jmartin5229.stockideatracker.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/list_of_stock_ideas"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/list_of_stock_ideas"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/add_new_stock_idea"
+        android:orderInCategory="200"
+        android:title="@string/add_new_stock_idea"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/portfolio_summary"
+        android:orderInCategory="300"
+        android:title="@string/portfolio_summary"
         app:showAsAction="never" />
 </menu>
