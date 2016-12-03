@@ -1,16 +1,21 @@
 package com.example.jmartin5229.stockideatracker;
 
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jmartin5229.stockideatracker.StockApi;
 
@@ -35,11 +40,16 @@ public class StockFragment extends Fragment {
     private ImageView mPicture;
     private TextView mGPS;
     private TextView mPurchasePrice;
+    private TextView mNumberStockLabel;
     private TextView mNumberStock;
+    private TextView mTotalStockPriceLabel;
     private TextView mTotalStockPrice;
+    private TextView mCurrentStockPriceLabel;
     private TextView mCurrentStockPrice;
+    private TextView mCurrentStockValueLabel;
     private TextView mCurrentStockValue;
-
+    private Button mPurchaseButton;
+    private String m_Text = "";
 
     public static StockFragment newInstance(UUID stockID)
     {
@@ -75,6 +85,7 @@ public class StockFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mStock.setName(s.toString());
+                /// Need to add ticker from Yahoo.
             }
 
             @Override
@@ -111,30 +122,115 @@ public class StockFragment extends Fragment {
         mPicture = (ImageView)v.findViewById(R.id.list_item_stock_idea_thumbnail);
         String imageName = mStock.getPicture();
         //This needs to be tested****************************************************************************************
-        int pictureId =  getResources().getIdentifier(imageName, "drawable", "com.example.jmartin5229.stockideatracker");
-        mPicture.setImageResource(pictureId);
+        if (imageName != "") {
+            int pictureId = getResources().getIdentifier(imageName, "drawable", "com.example.jmartin5229.stockideatracker");
+            mPicture.setImageResource(pictureId);
+        }
+        mPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //******************************get a picture from the camera
+                //                               save picture into drawable folder
+                //                               save picture name to database
+                //                               setImageResource to view of new picture
+                //                               get GPS
+                //                               save GPS to database
+                //                               update mGPS.setText
+            }
+        });
 
         mGPS = (TextView)v.findViewById(R.id.stock_idea_coordinates);
         mGPS.setText(mStock.getCoordinates());
 
         mPurchasePrice = (TextView)v.findViewById(R.id.stock_idea_purchase_price);
-        Double purchasePrice = mStock.getPurchasePrice();
+        final Double purchasePrice = mStock.getPurchasePrice();
         mPurchasePrice.setText(String.valueOf( purchasePrice));
 
         mNumberStock = (TextView)v.findViewById(R.id.stock_idea_number_of_stock_purchased);
         int numberStock = mStock.getNumberStock();
         mNumberStock.setText(String.valueOf(numberStock));
 
-        mTotalStockPrice = (TextView)v.findViewById(R.id.stock_idea_total_purchase_price);
-        mTotalStockPrice.setText(String.valueOf (purchasePrice * numberStock));
+        mNumberStockLabel = (TextView)v.findViewById(R.id.stock_idea_number_of_stock_purchased_label);
+        mTotalStockPriceLabel = (TextView)v.findViewById(R.id.stock_idea_total_purchase_price_label);
+        mCurrentStockPriceLabel = (TextView)v.findViewById(R.id.stock_idea_current_price_label);
+        mCurrentStockValueLabel = (TextView)v.findViewById(R.id.stock_idea_total_current_value_label);
+        mPurchaseButton = (Button)v.findViewById(R.id.stock_purchase_button);
+        mPurchaseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Title");
 
-        mCurrentStockPrice = (TextView)v.findViewById(R.id.stock_idea_current_price);
-        Double currentPrice = 1.11; //88888888888888888888888888Needs to be a method here to get the price from yahoo
-        mCurrentStockPrice.setText(String.valueOf(currentPrice));
+// Set up the input
+                final EditText input = new EditText(getActivity());
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                input.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL );
+                builder.setView(input);
 
-        mCurrentStockValue = (TextView)v.findViewById(R.id.stock_idea_total_current_value);
-        mCurrentStockValue.setText(String.valueOf(currentPrice * numberStock));
+// Set up the buttons
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        m_Text = input.getText().toString();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+
+                if(m_Text != "") {
+                    try {
+                        int numberStock = Integer.valueOf(m_Text);
+                        mNumberStock.setText(m_Text);
+                        mStock.setNumberStock(numberStock);
+                        mTotalStockPrice.setText(String.valueOf(numberStock * purchasePrice));
+                        mCurrentStockValue.setText(String.valueOf(numberStock * purchasePrice));
+                        mNumberStockLabel.setVisibility(View.VISIBLE);
+                        mTotalStockPriceLabel.setVisibility(View.VISIBLE);
+                        mCurrentStockPriceLabel.setVisibility(View.VISIBLE);
+                        mCurrentStockValueLabel.setVisibility(View.VISIBLE);
+                        mPurchaseButton.setVisibility(View.GONE);
+                    } catch (Exception e)
+                    {
+                        Toast.makeText(getActivity(), R.string.bad_input, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
+        if (numberStock <= 0)
+        {
+            mNumberStockLabel.setVisibility(View.GONE);
+            mTotalStockPriceLabel.setVisibility(View.GONE);
+            mCurrentStockPriceLabel.setVisibility(View.GONE);
+            mCurrentStockValueLabel.setVisibility(View.GONE);
+            mPurchaseButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mPurchaseButton.setVisibility(View.GONE);
+            mTotalStockPrice = (TextView) v.findViewById(R.id.stock_idea_total_purchase_price);
+            mTotalStockPrice.setText(String.valueOf(purchasePrice * numberStock));
+
+            mCurrentStockPrice = (TextView) v.findViewById(R.id.stock_idea_current_price);
+            Double currentPrice = 1.11; //88888888888888888888888888Needs to be a method here to get the price from yahoo
+            mCurrentStockPrice.setText(String.valueOf(currentPrice));
+
+            mCurrentStockValue = (TextView) v.findViewById(R.id.stock_idea_total_current_value);
+            mCurrentStockValue.setText(String.valueOf(currentPrice * numberStock));
+        }
+
         return v;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mStockApi.UpdateStock(mStock);
+    }
 }

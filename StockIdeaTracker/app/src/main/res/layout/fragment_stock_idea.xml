@@ -142,5 +142,11 @@
         android:layout_below="@+id/stock_idea_current_price_label"
         android:layout_toRightOf="@+id/stock_idea_total_current_value_label"
         android:text="@string/stock_idea_total_current_value"/>
+    <Button
+        android:id="@+id/stock_purchase_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stock_idea_number_of_stock_purchased_label"
+        android:text="@string/stock_purchase_button"/>
 
 </RelativeLayout>

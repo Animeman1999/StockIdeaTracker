@@ -22,4 +22,6 @@
     <string name="stock_idea_current_price">$23.34</string>
     <string name="stock_idea_total_current_value_label">Current Total Value: </string>
     <string name="stock_idea_total_current_value">$2223.45</string>
+    <string name="stock_purchase_button">Purchase this stock</string>
+    <string name="bad_input">Could not purchase stock. Number of stock entered must be a positive integer.</string>
 </resources>
