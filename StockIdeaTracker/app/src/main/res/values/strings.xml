@@ -4,4 +4,22 @@
     <string name="list_of_stock_ideas">List of Stock Ideas</string>
     <string name="portfolio_summary">Portfolio Summary</string>
     <string name="add_new_stock_idea">Add New Stock Idea</string>
+    <string name="stock_idea_title_label">Name of Stock: </string>
+    <string name="stock_idea_title">Texas Title</string>
+    <string name="stock_idea_ticker">TTT</string>
+    <string name="stock_idea_creation_date_label">Date Stock Idea Added: </string>
+    <string name="stock_idea_creation_date">11/11/2016</string>
+    <string name="stock_idea_coordinates_label">GPS Coordinates: </string>
+    <string name="stock_idea_coordinates">534234, 234234</string>
+    <string name="stock_idea_description">As sales of property has increased in Texas, title companies should have an inrease in sales.</string>
+    <string name="stock_idea_purchase_price_label">Purchase Price of the stock</string>
+    <string name="stock_idea_purchase_price">$12.45</string>
+    <string name="stock_idea_number_of_stock_purchased_label">Number of Stock Purchase: </string>
+    <string name="stock_idea_number_of_stock_purchased">35</string>
+    <string name="stock_idea_total_purchase_price_label">Total cost of stocks: </string>
+    <string name="stock_idea_total_purchase_price">$1245.34</string>
+    <string name="stock_idea_current_price_label">Current Stock Price: </string>
+    <string name="stock_idea_current_price">$23.34</string>
+    <string name="stock_idea_total_current_value_label">Current Total Value: </string>
+    <string name="stock_idea_total_current_value">$2223.45</string>
 </resources>
