@@ -38,6 +38,7 @@ public class StockBaseHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + StockIdeaTable.NAME + "(" +
                 " _id integer primary key autoincrement, " +
                 StockIdeaTable.Cols.UUID + ", " +
+                StockIdeaTable.Cols.NAME + ", " +
                 StockIdeaTable.Cols.TICKER + ", " +
                 StockIdeaTable.Cols.CREATION_DATE + ", " +
                 StockIdeaTable.Cols.DESCRIPTION + ", " +

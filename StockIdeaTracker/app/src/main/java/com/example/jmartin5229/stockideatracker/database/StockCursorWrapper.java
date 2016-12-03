@@ -32,7 +32,7 @@ public class StockCursorWrapper extends CursorWrapper {
         int numberStock = getInt(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.Number_Stock));
         Date purchaseDate = new Date(getLong(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.PURCHASE_DATE)));
 
-        Stock stock = new Stock(uuid, ticker, creationDate, description,picture,coordinates, purchasePrice, numberStock, purchaseDate);
+        Stock stock = new Stock(uuid, name, ticker, creationDate, description,picture,coordinates, purchasePrice, numberStock, purchaseDate);
 
         return stock;
     }
