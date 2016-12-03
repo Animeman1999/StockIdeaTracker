@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
 
     private int mSubtitleVisible = 1;
 
+    private Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

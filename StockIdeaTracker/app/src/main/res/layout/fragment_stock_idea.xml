@@ -143,5 +143,4 @@
         android:layout_toRightOf="@+id/stock_idea_total_current_value_label"
         android:text="@string/stock_idea_total_current_value"/>
 
-
 </RelativeLayout>
