@@ -10,11 +10,11 @@
         android:text="@string/stock_idea_title_label"/>
 
     <EditText
-    android:id="@+id/stock_idea_title"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/stock_idea_title"
-    android:layout_below="@+id/stock_idea_title_label"/>
+        android:id="@+id/stock_idea_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stock_idea_title"
+        android:layout_below="@+id/stock_idea_title_label"/>
 
     <TextView
         android:id="@+id/stock_idea_ticker"
