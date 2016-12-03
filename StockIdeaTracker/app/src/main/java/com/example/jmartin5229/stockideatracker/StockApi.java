@@ -12,6 +12,7 @@ import com.example.jmartin5229.stockideatracker.database.StockDBSchema.StockIdea
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Jeff on 12/2/2016.
@@ -59,6 +60,24 @@ public class StockApi {
         return stocks;
     }
 
+    public Stock GetStock (UUID uuid){
+        StockCursorWrapper cursorWrapper = QueryCrimes(
+                StockIdeaTable.Cols.UUID + " = ?",
+                new String[] {uuid.toString()},
+                null
+        );
+        try {
+            if (cursorWrapper.getCount() == 0) {
+                return null;
+            }
+            cursorWrapper.moveToFirst();
+            return cursorWrapper.getStock();
+        } finally {
+            //Close the cursor
+            cursorWrapper.close();
+        }
+    }
+
     public void UpdateStock(Stock stock) {
         String uuidString = stock.getUUID().toString();
         ContentValues values = GetContentValues(stock);
@@ -71,6 +90,7 @@ public class StockApi {
     {
         ContentValues values = new ContentValues();
         values.put(StockIdeaTable.Cols.UUID, stock.getUUID().toString());
+        values.put(StockIdeaTable.Cols.NAME, stock.getName());
         values.put(StockIdeaTable.Cols.TICKER, stock.getTicker());
         values.put(StockIdeaTable.Cols.CREATION_DATE, stock.getCreationDate().toString());
         values.put(StockIdeaTable.Cols.DESCRIPTION, stock.getDescription());

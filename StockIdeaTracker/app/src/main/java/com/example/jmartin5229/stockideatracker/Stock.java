@@ -10,6 +10,7 @@ import java.util.UUID;
 public class Stock {
 
     private UUID mUUID;
+    private String mName;
     private String  mTicker;
     private Date mCreationDate;
     private String  mDescription;
@@ -91,9 +92,18 @@ public class Stock {
         mPurchaseDate = purchaseDate;
     }
 
-    public Stock(UUID uuid, String ticker, Date CreationDate, String Description, String Picture,
+    public String getName() {
+        return mName;
+    }
+
+    public void setName(String name) {
+        mName = name;
+    }
+
+    public Stock(UUID uuid, String Name, String ticker, Date CreationDate, String Description, String Picture,
                  String Coordiantes, double PurchasePrice, int NumberStock, Date PurchaseDate){
         mUUID = uuid;
+        mName = Name;
         mTicker = ticker;
         mCreationDate = CreationDate;
         mDescription = Description;

@@ -22,6 +22,7 @@ public class StockCursorWrapper extends CursorWrapper {
     }
     public Stock getStock(){
         UUID uuid = UUID.fromString(getString(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.UUID)));
+        String name = getString(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.NAME));
         String  ticker = getString(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.TICKER));
         Date creationDate = new Date(getLong(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.CREATION_DATE)));
         String  description = getString(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.DESCRIPTION));

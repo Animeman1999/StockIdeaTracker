@@ -9,6 +9,7 @@ public class StockDBSchema {
         public static final String NAME = "stock_ideas";
         public static final class Cols {
             public static final String UUID = "uuid";
+            public static final String NAME = "name";
             public static final String TICKER = "ticker";
             public static final String CREATION_DATE = "creation_date";
             public static final String DESCRIPTION = "description";
