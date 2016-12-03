@@ -85,7 +85,7 @@ public class StockFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mStock.setName(s.toString());
-                /// Need to add ticker from Yahoo.
+                /// ************************************************************Need to add ticker from Yahoo.
             }
 
             @Override
@@ -161,13 +161,10 @@ public class StockFragment extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Title");
 
-// Set up the input
                 final EditText input = new EditText(getActivity());
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
                 input.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL );
                 builder.setView(input);
 
-// Set up the buttons
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
