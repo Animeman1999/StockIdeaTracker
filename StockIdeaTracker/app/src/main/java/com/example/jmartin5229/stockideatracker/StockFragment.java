@@ -2,7 +2,12 @@ package com.example.jmartin5229.stockideatracker;
 
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -19,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.jmartin5229.stockideatracker.StockApi;
 
+import java.io.File;
 import java.util.UUID;
 
 /**
@@ -30,7 +36,9 @@ public class StockFragment extends Fragment {
     private static final String DIALOG_DATE = "DialogDate";
     private StockApi mStockApi;
 
+    final Intent pickStock = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
     private static final int REQUEST_DATE = 0;
+    private static final int REQUEST_PHOTO = 2;
 
     private Stock mStock;
     private EditText mIdeaTitle;
@@ -51,6 +59,8 @@ public class StockFragment extends Fragment {
     private Button mPurchaseButton;
     private String m_Text = "";
 
+    private File mPhotoFile;
+
     public static StockFragment newInstance(UUID stockID)
     {
         Bundle args = new Bundle();
@@ -66,7 +76,7 @@ public class StockFragment extends Fragment {
         super.onCreate(savedInstanceState);
         UUID stockID = (UUID) getArguments().getSerializable(ARG_STOCK_ID);
         mStock = mStockApi.GetStock(stockID);
-
+        mPhotoFile = StockApi.get(getActivity()).getPhotoFile(mStock);
     }
 
     @Nullable
@@ -74,6 +84,16 @@ public class StockFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_stock_idea, container, false);
 
+        final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        PackageManager packageManager = getActivity().getPackageManager();
+
+        boolean canTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager) != null;
+
+
+
+        if(packageManager.resolveActivity(pickStock,PackageManager.MATCH_DEFAULT_ONLY)== null){
+
+        }
         mIdeaTitle = (EditText)v.findViewById(R.id.stock_idea_title);
         mIdeaTitle.setText(mStock.getName());
         mIdeaTitle.addTextChangedListener(new TextWatcher() {
@@ -126,9 +146,19 @@ public class StockFragment extends Fragment {
             int pictureId = getResources().getIdentifier(imageName, "drawable", "com.example.jmartin5229.stockideatracker");
             mPicture.setImageResource(pictureId);
         }
+        else
+        {
+            mPicture.setImageResource(R.drawable.take_a_picture);
+        }
+        if (canTakePhoto)
+        {
+            Uri uri = Uri.fromFile(mPhotoFile);
+            captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        }
         mPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivityForResult(captureImage, REQUEST_PHOTO);
                 //******************************get a picture from the camera
                 //                               save picture into drawable folder
                 //                               save picture name to database
@@ -230,4 +260,6 @@ public class StockFragment extends Fragment {
         super.onPause();
         mStockApi.UpdateStock(mStock);
     }
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
 }

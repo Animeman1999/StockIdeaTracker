@@ -27,6 +27,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <uses-feature
+            android:name = "android.hardware.camera2"
+            android:required = "true" />
     </application>
 
 </manifest>
