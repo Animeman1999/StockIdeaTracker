@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
@@ -20,8 +22,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_fragment_single);
+
+
+        // >Get the fragment manager from the activity.
+        FragmentManager fm = getSupportFragmentManager();
+        // >Get the current fragment from the frame layout. (null when first starting app)
+        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+        // >Create a fragment and add it to the fragment manager.(only happens when first starting app)
+        if (fragment == null) {
+            fragment = new StockIdeaListFragment();
+            fm.beginTransaction().add(R.id.fragment_container, fragment).commit();
         }
+    }
 
 
     @Override

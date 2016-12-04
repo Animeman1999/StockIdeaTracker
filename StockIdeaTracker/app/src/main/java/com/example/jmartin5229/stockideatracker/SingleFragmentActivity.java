@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 
 public abstract class SingleFragmentActivity extends AppCompatActivity {
 
+    // >The method used by all inheriting activities to build their single fragment.
     protected abstract Fragment createFragment();
 
     @Override
@@ -21,7 +22,12 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
 
         // >Get the fragment manager from the activity.
         FragmentManager fm = getSupportFragmentManager();
-        // >Get the current fragment from the frame layout. (null when first starting app).
+        // >Get the current fragment from the frame layout. (null when first starting app)
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+        // >Create a fragment and add it to the fragment manager.(only happens when first starting app)
+        if (fragment == null) {
+            fragment = createFragment();
+            fm.beginTransaction().add(R.id.fragment_container, fragment).commit();
+        }
     }
 }

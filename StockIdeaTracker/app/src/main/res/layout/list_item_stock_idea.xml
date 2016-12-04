@@ -14,11 +14,23 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/list_item_stock_idea_title"/>
 
+    <TextView
+        android:id="@+id/list_item_stock_idea_date_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/list_item_stock_idea_ticker_symbol"/>
+
+    <TextView
+        android:id="@+id/list_item_stock_idea_coordinates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/list_item_stock_idea_date_time"/>
+
     <ImageView
         android:id="@+id/list_item_stock_idea_thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/list_item_stock_idea_title"
+        android:layout_below="@+id/list_item_stock_idea_coordinates"
         android:layout_alignParentRight="true"/>
 
     <View
