@@ -16,7 +16,7 @@ public class StockDBSchema {
             public static final String PICTURE = "picture";
             public static final String COORDINATES = "coordinates";
             public static final String PURCHASE_PRICE = "purchase_price";
-            public static final String Number_Stock = "number_stock";
+            public static final String NUMBER_STOCK = "number_stock";
             public static final String PURCHASE_DATE = "purchase_date";
         }
     }

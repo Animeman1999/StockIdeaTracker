@@ -29,7 +29,7 @@ public class StockCursorWrapper extends CursorWrapper {
         String  picture = getString(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.PICTURE));
         String  coordinates = getString(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.COORDINATES));
         double  purchasePrice = getDouble(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.PURCHASE_PRICE));
-        int numberStock = getInt(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.Number_Stock));
+        int numberStock = getInt(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.NUMBER_STOCK));
         Date purchaseDate = new Date(getLong(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.PURCHASE_DATE)));
 
         Stock stock = new Stock(uuid, name, ticker, creationDate, description,picture,coordinates, purchasePrice, numberStock, purchaseDate);

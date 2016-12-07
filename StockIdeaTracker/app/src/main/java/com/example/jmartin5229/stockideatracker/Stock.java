@@ -100,6 +100,16 @@ public class Stock {
         mName = name;
     }
 
+    public Stock (){
+        this(UUID.randomUUID());
+    }
+
+    public Stock (UUID id){
+        mUUID = id;
+        mCreationDate = new Date();
+    }
+
+
     public Stock(UUID uuid, String Name, String ticker, Date CreationDate, String Description, String Picture,
                  String Coordiantes, double PurchasePrice, int NumberStock, Date PurchaseDate){
         mUUID = uuid;

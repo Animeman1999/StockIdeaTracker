@@ -4,15 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.jmartin5229.stockideatracker.R;
 import com.example.jmartin5229.stockideatracker.database.StockDBSchema.StockIdeaTable;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Scanner;
-import java.util.UUID;
 
 /**
  * Created by Jeff on 12/2/2016.
@@ -45,7 +37,8 @@ public class StockBaseHelper extends SQLiteOpenHelper {
                 StockIdeaTable.Cols.PICTURE + ", " +
                 StockIdeaTable.Cols.COORDINATES + ", " +
                 StockIdeaTable.Cols.PURCHASE_PRICE + ", " +
-                StockIdeaTable.Cols.Number_Stock +
+                StockIdeaTable.Cols.NUMBER_STOCK + ", " +
+                StockIdeaTable.Cols.PURCHASE_DATE +
                 ")"
         );
     }

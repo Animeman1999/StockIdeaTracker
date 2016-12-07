@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
 
 import com.example.jmartin5229.stockideatracker.database.StockBaseHelper;
 import com.example.jmartin5229.stockideatracker.database.StockCursorWrapper;
@@ -16,11 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import android.util.Log;
+
 /**
  * Created by Jeff on 12/2/2016.
  */
 
 public class StockApi {
+    private static String TAG = "StockAPICheck";
 
     private static StockApi sStockApi;
 
@@ -29,21 +31,24 @@ public class StockApi {
     private SQLiteDatabase mDatabase;
 
     public static StockApi get (Context context){
-        if (sStockApi == null)
-        {
+        Log.d(TAG, "---------------------Inside StockApi get--------------------------");
+        if (sStockApi == null) {
+            Log.d(TAG, "---------------------Inside of StockApi get - sStockApi == null--------------------------");
             sStockApi = new StockApi(context);
         }
         return sStockApi;
     }
 
     private StockApi(Context context){
+        Log.d(TAG, "---------------------Inside of StockApi--------------------------");
         mContext = context.getApplicationContext();
         mDatabase = new StockBaseHelper(mContext).getWritableDatabase();
     }
 
     public void AddStock(Stock stock){
+        Log.d(TAG, "---------------------Inside AddStock--------------------------");
         ContentValues values = GetContentValues(stock);
-        mDatabase.insert(StockDBSchema.StockIdeaTable.NAME, null, values);
+        mDatabase.insert(StockIdeaTable.NAME, null, values);
     }
 
     public List<Stock> GetStocks(){
@@ -68,14 +73,18 @@ public class StockApi {
                 new String[] {uuid.toString()},
                 null
         );
+        Log.d(TAG, "---------------------Inside of GetStock method--------------------------");
         try {
             if (cursorWrapper.getCount() == 0) {
+                Log.d(TAG, "--------------------------Cursor did not return a value--------------------");
                 return null;
             }
+            Log.d(TAG, "----------------------Cursor found a value--------------------------");
             cursorWrapper.moveToFirst();
             return cursorWrapper.getStock();
         } finally {
             //Close the cursor
+            Log.d(TAG, "-----------------------------Exiting GetStockMethod--------------------------");
             cursorWrapper.close();
         }
     }
@@ -88,7 +97,7 @@ public class StockApi {
                 new String[]{uuidString});
     }
 
-    public ContentValues GetContentValues (Stock stock)
+    public static ContentValues GetContentValues (Stock stock)
     {
         ContentValues values = new ContentValues();
         values.put(StockIdeaTable.Cols.UUID, stock.getUUID().toString());
@@ -99,8 +108,15 @@ public class StockApi {
         values.put(StockIdeaTable.Cols.PICTURE, stock.getPicture());
         values.put(StockIdeaTable.Cols.COORDINATES, stock.getCoordinates());
         values.put(StockIdeaTable.Cols.PURCHASE_PRICE, stock.getPurchasePrice());
-        values.put(StockIdeaTable.Cols.Number_Stock, stock.getNumberStock());
-        values.put(StockIdeaTable.Cols.PURCHASE_DATE, stock.getPurchaseDate().toString());
+        values.put(StockIdeaTable.Cols.NUMBER_STOCK, stock.getNumberStock());
+        if (stock.getPurchaseDate() == null)
+        {
+            values.put(StockIdeaTable.Cols.PURCHASE_DATE, "");
+        }else
+        {
+            values.put(StockIdeaTable.Cols.PURCHASE_DATE, stock.getPurchaseDate().toString());
+        }
+
 
         return values;
     }
@@ -113,7 +129,7 @@ public class StockApi {
                 whereArgs,
                 null, //group by
                 null, //having
-                orderBy
+                orderBy  //order by
         );
 
         return new StockCursorWrapper(cursor);

@@ -77,8 +77,10 @@ public class StockIdeaListFragment extends Fragment {
             mTickerTextView.setText(stockIdea.getTicker());
             mDateTimeTextView.setText(stockIdea.getCreationDate().toString());
             mCoordinatesTextView.setText(stockIdea.getCoordinates());
-            int pictureId = getResources().getIdentifier(stockIdea.getPicture(), "drawable", "com.example.jmartin5229.stockideatracker");
-            mThumbnailImageView.setImageResource(pictureId);
+            if (stockIdea.getPicture()!= null){
+                int pictureId = getResources().getIdentifier(stockIdea.getPicture(), "drawable", "com.example.jmartin5229.stockideatracker");
+                mThumbnailImageView.setImageResource(pictureId);
+            }
         }
 
         @Override

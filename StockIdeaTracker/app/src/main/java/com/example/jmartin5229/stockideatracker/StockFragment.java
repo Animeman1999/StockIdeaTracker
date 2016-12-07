@@ -1,6 +1,6 @@
 package com.example.jmartin5229.stockideatracker;
 
-import android.app.Fragment;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,6 +21,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 
 import com.example.jmartin5229.stockideatracker.StockApi;
 
@@ -41,6 +43,7 @@ public class StockFragment extends Fragment {
     private static final int REQUEST_PHOTO = 2;
 
     private Stock mStock;
+
     private EditText mIdeaTitle;
     private TextView mTicker;
     private TextView mDateAdded;
@@ -65,6 +68,7 @@ public class StockFragment extends Fragment {
     {
         Bundle args = new Bundle();
         args.putSerializable(ARG_STOCK_ID, stockID);
+
         StockFragment stockFragment = new StockFragment();
         stockFragment.setArguments(args);
 
@@ -75,8 +79,8 @@ public class StockFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UUID stockID = (UUID) getArguments().getSerializable(ARG_STOCK_ID);
-        mStock = mStockApi.GetStock(stockID);
-        mPhotoFile = StockApi.get(getActivity()).getPhotoFile(mStock);
+        mStock = StockApi.get(getActivity()).GetStock(stockID);
+        //mPhotoFile = StockApi.get(getActivity()).getPhotoFile(mStock);
     }
 
     @Nullable
@@ -142,7 +146,7 @@ public class StockFragment extends Fragment {
         mPicture = (ImageView)v.findViewById(R.id.list_item_stock_idea_thumbnail);
         String imageName = mStock.getPicture();
         //This needs to be tested****************************************************************************************
-        if (imageName != "") {
+        if (imageName != null) {
             int pictureId = getResources().getIdentifier(imageName, "drawable", "com.example.jmartin5229.stockideatracker");
             mPicture.setImageResource(pictureId);
         }
@@ -258,7 +262,7 @@ public class StockFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        mStockApi.UpdateStock(mStock);
+        StockApi.get(getActivity()).UpdateStock(mStock);
     }
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
