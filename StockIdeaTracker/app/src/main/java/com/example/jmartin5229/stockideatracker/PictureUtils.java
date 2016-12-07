@@ -21,7 +21,7 @@ public class PictureUtils {
         int inSampleSize = 1;
         if (srcWidth > destHeight || srcWidth > destWidth){
             if (srcWidth > srcHeight){
-                inSampleSize = Math.round(srcHeight/destWidth);
+                inSampleSize = Math.round(srcHeight/destHeight);
             }else{
                 inSampleSize = Math.round(srcWidth/destWidth);
             }
@@ -31,6 +31,7 @@ public class PictureUtils {
         options.inSampleSize = inSampleSize;
         return BitmapFactory.decodeFile(path, options);
     }
+
     public static Bitmap getScaledBitmap(String path, Activity
             activity) {
         Point size = new Point();

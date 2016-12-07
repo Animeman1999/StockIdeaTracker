@@ -46,7 +46,7 @@ public class StockFragment extends Fragment {
     private TextView mTicker;
     private TextView mDateAdded;
     private EditText mDescription;
-    private ImageView mPicture;
+    private ImageView mPhotoView;
     private TextView mGPS;
     private TextView mPurchasePrice;
     private TextView mNumberStockLabel;
@@ -78,6 +78,7 @@ public class StockFragment extends Fragment {
         super.onCreate(savedInstanceState);
         UUID stockID = (UUID) getArguments().getSerializable(ARG_STOCK_ID);
         mStock = StockApi.get(getActivity()).GetStock(stockID);
+        mPhotoFile = StockApi.get(getActivity()).getPhotoFile(mStock);
        }
 
     @Nullable
@@ -141,23 +142,24 @@ public class StockFragment extends Fragment {
             }
         });
 
-        mPicture = (ImageView)v.findViewById(R.id.list_item_stock_idea_thumbnail);
+        mPhotoView = (ImageView)v.findViewById(R.id.list_item_stock_idea_thumbnail);
         String imageName = mStock.getPicture();
-        //This needs to be tested****************************************************************************************
-        if (imageName != null) {
-            int pictureId = getResources().getIdentifier(imageName, "drawable", "com.example.jmartin5229.stockideatracker");
-            mPicture.setImageResource(pictureId);
-        }
-        else
-        {
-            mPicture.setImageResource(R.drawable.take_a_picture);
-        }
+//        if (imageName != null) {
+//            int pictureId = getResources().getIdentifier(imageName, "drawable", "com.example.jmartin5229.stockideatracker");
+//            mPhotoView.setImageResource(pictureId);
+//        }
+//        else
+//        {
+//            mPhotoView.setImageResource(R.drawable.take_a_picture);
+//        }
+
+        updatePhotoView();
         if (canTakePhoto)
         {
             Uri uri = Uri.fromFile(mPhotoFile);
             captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         }
-        mPicture.setOnClickListener(new View.OnClickListener() {
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivityForResult(captureImage, REQUEST_PHOTO);
@@ -169,8 +171,11 @@ public class StockFragment extends Fragment {
                 //                               get GPS
                 //                               save GPS to database
                 //                               update mGPS.setText
+                mPhotoView = (ImageView)v.findViewById(R.id.list_item_stock_idea_thumbnail);
+
                 updatePhotoView();
             }
+
         });
 
 
@@ -271,6 +276,12 @@ public class StockFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_PHOTO){
+            updatePhotoView();
+        }
+    }
 
     @Override
     public void onPause() {
@@ -281,11 +292,11 @@ public class StockFragment extends Fragment {
 
     private void updatePhotoView() {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
-          mPicture.setImageDrawable(null);
+            mPhotoView.setImageResource(R.drawable.take_a_picture);
         } else {
             Bitmap bitmap = PictureUtils.getScaledBitmap(
                     mPhotoFile.getPath(), getActivity());
-            mPicture.setImageBitmap(bitmap);
+            mPhotoView.setImageBitmap(bitmap);
         }
     }
 }

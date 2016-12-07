@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import android.os.Environment;
 import android.util.Log;
 
 /**
@@ -136,6 +137,10 @@ public class StockApi {
     }
 
     public File getPhotoFile(Stock stock){
-        return new File("main/res/drawable/", stock.getPicture());
+        File externalFilesDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (externalFilesDir == null){
+            return null;
+        }
+        return new File(externalFilesDir, stock.getNewPicture());
     }
 }

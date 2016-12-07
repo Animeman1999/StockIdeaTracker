@@ -1,5 +1,6 @@
 package com.example.jmartin5229.stockideatracker;
 
+import java.io.File;
 import java.util.Date;
 import java.util.UUID;
 
@@ -54,6 +55,10 @@ public class Stock {
 
     public String getPicture() {
         return mPicture;
+    }
+
+    public String getNewPicture() {
+        return "IMG_" + getUUID().toString() + ".jpg";
     }
 
     public void setPicture(String picture) {
