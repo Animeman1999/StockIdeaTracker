@@ -22,9 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-
-import com.example.jmartin5229.stockideatracker.StockApi;
 
 import java.io.File;
 import java.util.UUID;
@@ -60,7 +57,7 @@ public class StockFragment extends Fragment {
     private TextView mCurrentStockValueLabel;
     private TextView mCurrentStockValue;
     private Button mPurchaseButton;
-    private String m_Text = "";
+    private String mPurchaseText = "";
 
     private File mPhotoFile;
 
@@ -123,6 +120,7 @@ public class StockFragment extends Fragment {
 
         mDateAdded = (TextView)v.findViewById(R.id.stock_idea_creation_date);
         mDateAdded.setText(mStock.getCreationDate().toString());
+        mCurrentStockValue = (TextView) v.findViewById(R.id.stock_idea_total_current_value);
 
         mDescription =(EditText)v.findViewById(R.id.stock_idea_description);
         mDescription.setText(mStock.getDescription());
@@ -184,25 +182,50 @@ public class StockFragment extends Fragment {
         int numberStock = mStock.getNumberStock();
         mNumberStock.setText(String.valueOf(numberStock));
 
+        mTotalStockPrice = (TextView) v.findViewById(R.id.stock_idea_total_purchase_price);
+        mCurrentStockPrice = (TextView) v.findViewById(R.id.stock_idea_current_price);
+
         mNumberStockLabel = (TextView)v.findViewById(R.id.stock_idea_number_of_stock_purchased_label);
         mTotalStockPriceLabel = (TextView)v.findViewById(R.id.stock_idea_total_purchase_price_label);
         mCurrentStockPriceLabel = (TextView)v.findViewById(R.id.stock_idea_current_price_label);
         mCurrentStockValueLabel = (TextView)v.findViewById(R.id.stock_idea_total_current_value_label);
         mPurchaseButton = (Button)v.findViewById(R.id.stock_purchase_button);
+
         mPurchaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Title");
+                builder.setTitle("Enter the number of Stocks to buy.");
 
                 final EditText input = new EditText(getActivity());
-                input.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL );
+                input.setInputType(InputType.TYPE_CLASS_NUMBER );
                 builder.setView(input);
 
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        m_Text = input.getText().toString();
+                        mPurchaseText = input.getText().toString();
+                        if(mPurchaseText != "") {
+                            try {
+                                int numberStock = Integer.valueOf(mPurchaseText);
+                                mNumberStock.setText(mPurchaseText);
+                                mStock.setNumberStock(numberStock);
+                                mTotalStockPrice.setText(String.valueOf(numberStock * purchasePrice));
+                                mCurrentStockValue.setText(String.valueOf(numberStock * purchasePrice));
+                                mNumberStockLabel.setVisibility(View.VISIBLE);
+                                mNumberStock.setVisibility(View.VISIBLE);
+                                mTotalStockPriceLabel.setVisibility(View.VISIBLE);
+                                mTotalStockPrice.setVisibility(View.VISIBLE);
+                                mCurrentStockPriceLabel.setVisibility(View.VISIBLE);
+                                mCurrentStockPrice.setVisibility(View.VISIBLE);
+                                mCurrentStockValueLabel.setVisibility(View.VISIBLE);
+                                mCurrentStockValue.setVisibility(View.VISIBLE);
+                                mPurchaseButton.setVisibility(View.GONE);
+                            } catch (Exception e)
+                            {
+                                Toast.makeText(getActivity(), R.string.bad_input, Toast.LENGTH_SHORT).show();
+                            }
+                        }  
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -214,50 +237,37 @@ public class StockFragment extends Fragment {
 
                 builder.show();
 
-                if(m_Text != "") {
-                    try {
-                        int numberStock = Integer.valueOf(m_Text);
-                        mNumberStock.setText(m_Text);
-                        mStock.setNumberStock(numberStock);
-                        mTotalStockPrice.setText(String.valueOf(numberStock * purchasePrice));
-                        mCurrentStockValue.setText(String.valueOf(numberStock * purchasePrice));
-                        mNumberStockLabel.setVisibility(View.VISIBLE);
-                        mTotalStockPriceLabel.setVisibility(View.VISIBLE);
-                        mCurrentStockPriceLabel.setVisibility(View.VISIBLE);
-                        mCurrentStockValueLabel.setVisibility(View.VISIBLE);
-                        mPurchaseButton.setVisibility(View.GONE);
-                    } catch (Exception e)
-                    {
-                        Toast.makeText(getActivity(), R.string.bad_input, Toast.LENGTH_SHORT).show();
-                    }
-                }
+
             }
         });
 
         if (numberStock <= 0)
         {
             mNumberStockLabel.setVisibility(View.GONE);
+            mNumberStock.setVisibility(View.GONE);
             mTotalStockPriceLabel.setVisibility(View.GONE);
+            mTotalStockPrice.setVisibility(View.GONE);
             mCurrentStockPriceLabel.setVisibility(View.GONE);
+            mCurrentStockPrice.setVisibility(View.GONE);
             mCurrentStockValueLabel.setVisibility(View.GONE);
+            mCurrentStockValue.setVisibility(View.GONE);
             mPurchaseButton.setVisibility(View.VISIBLE);
         }
         else
         {
             mPurchaseButton.setVisibility(View.GONE);
-            mTotalStockPrice = (TextView) v.findViewById(R.id.stock_idea_total_purchase_price);
+
             mTotalStockPrice.setText(String.valueOf(purchasePrice * numberStock));
 
-            mCurrentStockPrice = (TextView) v.findViewById(R.id.stock_idea_current_price);
             Double currentPrice = 1.11; //88888888888888888888888888Needs to be a method here to get the price from yahoo
             mCurrentStockPrice.setText(String.valueOf(currentPrice));
 
-            mCurrentStockValue = (TextView) v.findViewById(R.id.stock_idea_total_current_value);
             mCurrentStockValue.setText(String.valueOf(currentPrice * numberStock));
         }
 
         return v;
     }
+
 
     @Override
     public void onPause() {

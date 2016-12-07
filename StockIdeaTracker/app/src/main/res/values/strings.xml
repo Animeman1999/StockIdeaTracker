@@ -12,7 +12,7 @@
     <string name="stock_idea_coordinates_label">GPS Coordinates: </string>
     <string name="stock_idea_coordinates">534234, 234234</string>
     <string name="stock_idea_description">As sales of property has increased in Texas, title companies should have an inrease in sales.</string>
-    <string name="stock_idea_purchase_price_label">Purchase Price of the stock</string>
+    <string name="stock_idea_purchase_price_label">Purchase Price of the stock: </string>
     <string name="stock_idea_purchase_price">$12.45</string>
     <string name="stock_idea_number_of_stock_purchased_label">Number of Stock Purchase: </string>
     <string name="stock_idea_number_of_stock_purchased">35</string>
@@ -24,4 +24,6 @@
     <string name="stock_idea_total_current_value">$2223.45</string>
     <string name="stock_purchase_button">Purchase this stock</string>
     <string name="bad_input">Could not purchase stock. Number of stock entered must be a positive integer.</string>
+    <string name="stock_idea_description_label">Stock Idea: </string>
+    <string name="save_idea_button">Save Stock Idea</string>
 </resources>
