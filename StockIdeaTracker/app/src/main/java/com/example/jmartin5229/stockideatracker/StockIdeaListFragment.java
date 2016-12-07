@@ -86,7 +86,7 @@ public class StockIdeaListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             // >Start a new activity with the intent of the stock idea with the passed in UUID.
-            //startActivity(StockFragmentActivity.newIntent(getActivity(), mStockIdea.getUUID()) );
+            startActivity(StockActivity.newIntent(getActivity(), mStockIdea.getUUID()) );
         }
     }
 

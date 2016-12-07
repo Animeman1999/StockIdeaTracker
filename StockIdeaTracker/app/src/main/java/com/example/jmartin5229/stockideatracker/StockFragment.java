@@ -4,6 +4,7 @@ package com.example.jmartin5229.stockideatracker;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -77,8 +78,7 @@ public class StockFragment extends Fragment {
         super.onCreate(savedInstanceState);
         UUID stockID = (UUID) getArguments().getSerializable(ARG_STOCK_ID);
         mStock = StockApi.get(getActivity()).GetStock(stockID);
-        //mPhotoFile = StockApi.get(getActivity()).getPhotoFile(mStock);
-    }
+       }
 
     @Nullable
     @Override
@@ -161,6 +161,7 @@ public class StockFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivityForResult(captureImage, REQUEST_PHOTO);
+
                 //******************************get a picture from the camera
                 //                               save picture into drawable folder
                 //                               save picture name to database
@@ -168,8 +169,10 @@ public class StockFragment extends Fragment {
                 //                               get GPS
                 //                               save GPS to database
                 //                               update mGPS.setText
+                updatePhotoView();
             }
         });
+
 
         mGPS = (TextView)v.findViewById(R.id.stock_idea_coordinates);
         mGPS.setText(mStock.getCoordinates());
@@ -225,7 +228,7 @@ public class StockFragment extends Fragment {
                             {
                                 Toast.makeText(getActivity(), R.string.bad_input, Toast.LENGTH_SHORT).show();
                             }
-                        }  
+                        }
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -276,4 +279,13 @@ public class StockFragment extends Fragment {
     }
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
+    private void updatePhotoView() {
+        if (mPhotoFile == null || !mPhotoFile.exists()) {
+          mPicture.setImageDrawable(null);
+        } else {
+            Bitmap bitmap = PictureUtils.getScaledBitmap(
+                    mPhotoFile.getPath(), getActivity());
+            mPicture.setImageBitmap(bitmap);
+        }
+    }
 }
