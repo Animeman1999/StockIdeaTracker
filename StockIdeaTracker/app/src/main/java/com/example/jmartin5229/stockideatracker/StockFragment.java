@@ -62,6 +62,9 @@ public class StockFragment extends Fragment {
     private TextView mCurrentStockValue;
     private Button mPurchaseButton;
     private String mPurchaseText = "";
+    private TextView mPurchaseDateLabel;
+    private TextView mPurchaseDate;
+
 
     private long mCreationDateLong;
     private File mPhotoFile;
@@ -124,8 +127,6 @@ public class StockFragment extends Fragment {
         mTicker = (TextView)v.findViewById(R.id.stock_idea_ticker);
         mTicker.setText(mStock.getTicker());
 
-        /////////////////////////////////
-
         String creationDate =  mStock.getCreationDate();
         Log.e("Test", "666666666666666666666666666 OnCreateView - creationDate =" + creationDate + "6666666666666666666666666");
         Log.e("Test", "666666666666666666666666666 OnCreateView - creationDate.toString() =" + creationDate + "6666666666666666666666666");
@@ -138,7 +139,6 @@ public class StockFragment extends Fragment {
         mDescription.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -152,16 +152,7 @@ public class StockFragment extends Fragment {
             }
         });
 
-        mPhotoView = (ImageView)v.findViewById(R.id.list_item_stock_idea_thumbnail);
-        String imageName = mStock.getPicture();
-//        if (imageName != null) {
-//            int pictureId = getResources().getIdentifier(imageName, "drawable", "com.example.jmartin5229.stockideatracker");
-//            mPhotoView.setImageResource(pictureId);
-//        }
-//        else
-//        {
-//            mPhotoView.setImageResource(R.drawable.take_a_picture);
-//        }
+       // mPhotoView = (ImageView)v.findViewById(R.id.stock_idea_thumbnail);
 
         updatePhotoView();
         if (canTakePhoto)
@@ -181,7 +172,7 @@ public class StockFragment extends Fragment {
                 //                               get GPS
                 //                               save GPS to database
                 //                               update mGPS.setText
-                mPhotoView = (ImageView)v.findViewById(R.id.list_item_stock_idea_thumbnail);
+                //mPhotoView = (ImageView)v.findViewById(R.id.stock_idea_thumbnail);
 
                 updatePhotoView();
             }
@@ -208,6 +199,8 @@ public class StockFragment extends Fragment {
         mCurrentStockPriceLabel = (TextView)v.findViewById(R.id.stock_idea_current_price_label);
         mCurrentStockValueLabel = (TextView)v.findViewById(R.id.stock_idea_total_current_value_label);
         mPurchaseButton = (Button)v.findViewById(R.id.stock_purchase_button);
+        mPurchaseDateLabel =(TextView)v.findViewById(R.id.stock_purchase_date_label);
+        mPurchaseDate = (TextView)v.findViewById(R.id.stock_purchase_date);
 
         mPurchaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,6 +234,8 @@ public class StockFragment extends Fragment {
                                 mNumberStock.setVisibility(View.VISIBLE);
                                 mTotalStockPriceLabel.setVisibility(View.VISIBLE);
                                 mTotalStockPrice.setVisibility(View.VISIBLE);
+                                mPurchaseDateLabel.setVisibility(View.VISIBLE);
+                                mPurchaseDate.setVisibility(View.VISIBLE);
                                 mCurrentStockPriceLabel.setVisibility(View.VISIBLE);
                                 mCurrentStockPrice.setVisibility(View.VISIBLE);
                                 mCurrentStockValueLabel.setVisibility(View.VISIBLE);
@@ -273,6 +268,8 @@ public class StockFragment extends Fragment {
             mTotalStockPriceLabel.setVisibility(View.GONE);
             mTotalStockPrice.setVisibility(View.GONE);
             mCurrentStockPriceLabel.setVisibility(View.GONE);
+            mPurchaseDateLabel.setVisibility(View.GONE);
+            mPurchaseDate.setVisibility(View.GONE);
             mCurrentStockPrice.setVisibility(View.GONE);
             mCurrentStockValueLabel.setVisibility(View.GONE);
             mCurrentStockValue.setVisibility(View.GONE);

@@ -52,7 +52,7 @@
         android:text="@string/stock_idea_description"/>
 
     <ImageView
-        android:id="@+id/list_item_stock_idea_thumbnail"
+        android:id="@+id/stock_idea_thumbnail"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"
@@ -63,14 +63,14 @@
         android:id="@+id/stock_idea_coordinates_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/list_item_stock_idea_thumbnail"
+        android:layout_below="@+id/stock_idea_thumbnail"
         android:text="@string/stock_idea_coordinates_label"/>
 
     <TextView
         android:id="@+id/stock_idea_coordinates"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/list_item_stock_idea_thumbnail"
+        android:layout_below="@+id/stock_idea_thumbnail"
         android:layout_toRightOf="@+id/stock_idea_total_current_value_label"
         android:text="@string/stock_idea_coordinates"/>
 
@@ -120,17 +120,32 @@
         android:text="@string/stock_idea_total_purchase_price"/>
 
     <TextView
-        android:id="@+id/stock_idea_current_price_label"
+        android:id="@+id/stock_purchase_date_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/stock_idea_total_purchase_price_label"
+        android:text="@string/stock_purchase_date_label"/>
+
+    <TextView
+        android:id="@+id/stock_purchase_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stock_idea_total_purchase_price_label"
+        android:layout_toRightOf="@+id/stock_purchase_date_label"
+        android:text="@string/stock_purchase_date"/>
+
+    <TextView
+        android:id="@+id/stock_idea_current_price_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stock_purchase_date_label"
         android:text="@string/stock_idea_current_price_label"/>
 
     <TextView
         android:id="@+id/stock_idea_current_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/stock_idea_total_purchase_price_label"
+        android:layout_below="@+id/stock_purchase_date_label"
         android:layout_toRightOf="@+id/stock_idea_current_price_label"
         android:text="@string/stock_idea_current_price"/>
 

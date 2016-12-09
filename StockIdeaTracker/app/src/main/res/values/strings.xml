@@ -26,4 +26,6 @@
     <string name="bad_input">Could not purchase stock. Number of stock entered must be a positive integer.</string>
     <string name="stock_idea_description_label">Stock Idea: </string>
     <string name="save_idea_button">Save Stock Idea</string>
+    <string name="stock_purchase_date_label">Date Stock Purchased: </string>
+    <string name="stock_purchase_date">12/11/2016</string>
 </resources>

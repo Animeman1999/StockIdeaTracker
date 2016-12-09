@@ -1,6 +1,7 @@
 package com.example.jmartin5229.stockideatracker;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +30,7 @@ public class StockIdeaListFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private StockIdeaAdapter mAdapter;
+    private File mPhotoFile;
 
 
     @Override
@@ -72,16 +75,20 @@ public class StockIdeaListFragment extends Fragment {
 
         public void bindStockIdea(Stock stockIdea) {
             mStockIdea = stockIdea;
+            mPhotoFile = StockApi.get(getActivity()).getPhotoFile(stockIdea);
             // >Set the widgets, using the passed in stock idea.
             mTitleTextView.setText(stockIdea.getName());
             mTickerTextView.setText(stockIdea.getTicker());
             mDateTimeTextView.setText(stockIdea.getCreationDate());
             mCoordinatesTextView.setText(stockIdea.getCoordinates());
-            if (stockIdea.getPicture()!= null){
-                int pictureId = getResources().getIdentifier(stockIdea.getPicture(), "drawable", "com.example.jmartin5229.stockideatracker");
-                mThumbnailImageView.setImageResource(pictureId);
+            if (mPhotoFile == null || !mPhotoFile.exists()) {
+                mThumbnailImageView.setImageResource(R.drawable.take_a_picture);
+            } else {
+                Bitmap bitmap = PictureUtils.getScaledBitmap(
+                        mPhotoFile.getPath(), 75, 75);
+                mThumbnailImageView.setImageBitmap(bitmap);
             }
-        }
+    }
 
         @Override
         public void onClick(View v) {
