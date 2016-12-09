@@ -2,6 +2,8 @@ package com.example.jmartin5229.stockideatracker.database;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.util.Log;
+
 import com.example.jmartin5229.stockideatracker.Stock;
 
 import java.util.Date;
@@ -24,15 +26,27 @@ public class StockCursorWrapper extends CursorWrapper {
         UUID uuid = UUID.fromString(getString(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.UUID)));
         String name = getString(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.NAME));
         String  ticker = getString(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.TICKER));
-        Date creationDate = new Date(getLong(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.CREATION_DATE)));
+        String creationDate = getString( getColumnIndex(StockDBSchema.StockIdeaTable.Cols.CREATION_DATE));
         String  description = getString(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.DESCRIPTION));
         String  picture = getString(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.PICTURE));
         String  coordinates = getString(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.COORDINATES));
         double  purchasePrice = getDouble(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.PURCHASE_PRICE));
         int numberStock = getInt(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.NUMBER_STOCK));
-        Date purchaseDate = new Date(getLong(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.PURCHASE_DATE)));
+        String purchaseDate = (getString(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.PURCHASE_DATE)));
 
-        Stock stock = new Stock(uuid, name, ticker, creationDate, description,picture,coordinates, purchasePrice, numberStock, purchaseDate);
+        Log.d("Test", "^^^^^^^^^^^^^^^^^^^^^^^^StockCursorWrapper - creationDate = " + creationDate + "^^^^^^^^^^^^^^^^^^^^^^^");
+        Stock stock = new Stock(uuid);
+        stock.setName(name);
+        stock.setTicker(ticker);
+        stock.setCreationDate(creationDate);
+        stock.setDescription(description);
+        stock.setPicture(picture);
+        stock.setCoordinates(coordinates);
+        stock.setPurchasePrice(purchasePrice);
+        stock.setNumberStock(numberStock);
+        stock.setPurchaseDate(purchaseDate);
+        Log.d("Test", "^^^^^^^^^^^^^^^^^^^^^^^^^^^StockCursorWrapper - stock.getPurchaseDate(new Date(purchaseDate)) = " + stock.getPurchaseDate().toString()+ "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+
 
         return stock;
     }

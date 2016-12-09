@@ -1,6 +1,8 @@
 package com.example.jmartin5229.stockideatracker;
 
-import java.io.File;
+import android.text.format.DateFormat;
+import android.util.Log;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -10,16 +12,17 @@ import java.util.UUID;
 
 public class Stock {
 
+
     private UUID mUUID;
     private String mName;
     private String  mTicker;
-    private Date mCreationDate;
+    private String mCreationDate;
     private String  mDescription;
     private String  mPicture;
     private String  mCoordinates;
     private double  mPurchasePrice;
     private int mNumberStock;
-    private Date mPurchaseDate;
+    private String mPurchaseDate;
 
     public UUID getUUID() {
         return mUUID;
@@ -37,11 +40,11 @@ public class Stock {
         mTicker = ticker;
     }
 
-    public Date getCreationDate() {
+    public String getCreationDate() {
         return mCreationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(String creationDate) {
         mCreationDate = creationDate;
     }
 
@@ -89,11 +92,11 @@ public class Stock {
         mNumberStock = numberStock;
     }
 
-    public Date getPurchaseDate() {
+    public String getPurchaseDate() {
         return mPurchaseDate;
     }
 
-    public void setPurchaseDate(Date purchaseDate) {
+    public void setPurchaseDate(String purchaseDate) {
         mPurchaseDate = purchaseDate;
     }
 
@@ -111,12 +114,21 @@ public class Stock {
 
     public Stock (UUID id){
         mUUID = id;
-        mCreationDate = new Date();
+        Date date = new Date();
+
+        //Declare a date format to use on the date
+        String dateFormat = "yyyy MMM dd hh:mm";
+        //Get a string version of the data formated by the date format
+        mCreationDate = DateFormat.format(dateFormat, date)
+                .toString();
+        Log.d("Check","#######################public Stock (UUID id){\n" +
+                "        mUUID = id;\n" +
+                "        mCreationDate = new Date();" + date +  " mCreationDate " + mCreationDate + " ############################");
     }
 
 
-    public Stock(UUID uuid, String Name, String ticker, Date CreationDate, String Description, String Picture,
-                 String Coordiantes, double PurchasePrice, int NumberStock, Date PurchaseDate){
+    public Stock(UUID uuid, String Name, String ticker, String CreationDate, String Description, String Picture,
+                 String Coordiantes, double PurchasePrice, int NumberStock, String PurchaseDate){
         mUUID = uuid;
         mName = Name;
         mTicker = ticker;

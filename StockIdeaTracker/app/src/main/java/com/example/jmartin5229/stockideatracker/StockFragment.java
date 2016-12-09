@@ -14,6 +14,8 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.app.Fragment;
 
+import java.util.Date;
 import java.io.File;
 import java.util.UUID;
 
@@ -60,6 +63,7 @@ public class StockFragment extends Fragment {
     private Button mPurchaseButton;
     private String mPurchaseText = "";
 
+    private long mCreationDateLong;
     private File mPhotoFile;
 
     public static StockFragment newInstance(UUID stockID)
@@ -78,6 +82,7 @@ public class StockFragment extends Fragment {
         super.onCreate(savedInstanceState);
         UUID stockID = (UUID) getArguments().getSerializable(ARG_STOCK_ID);
         mStock = StockApi.get(getActivity()).GetStock(stockID);
+        Log.d("Test", "666666666666666666666666666 StockFragment.java OnCreate - mStock.getPurchaseDate() = "+ mStock.getPurchaseDate() + "66666666666666666666666666666");
         mPhotoFile = StockApi.get(getActivity()).getPhotoFile(mStock);
        }
 
@@ -119,8 +124,13 @@ public class StockFragment extends Fragment {
         mTicker = (TextView)v.findViewById(R.id.stock_idea_ticker);
         mTicker.setText(mStock.getTicker());
 
+        /////////////////////////////////
+
+        String creationDate =  mStock.getCreationDate();
+        Log.e("Test", "666666666666666666666666666 OnCreateView - creationDate =" + creationDate + "6666666666666666666666666");
+        Log.e("Test", "666666666666666666666666666 OnCreateView - creationDate.toString() =" + creationDate + "6666666666666666666666666");
         mDateAdded = (TextView)v.findViewById(R.id.stock_idea_creation_date);
-        mDateAdded.setText(mStock.getCreationDate().toString());
+        mDateAdded.setText( creationDate);
         mCurrentStockValue = (TextView) v.findViewById(R.id.stock_idea_total_current_value);
 
         mDescription =(EditText)v.findViewById(R.id.stock_idea_description);
@@ -218,6 +228,13 @@ public class StockFragment extends Fragment {
                                 int numberStock = Integer.valueOf(mPurchaseText);
                                 mNumberStock.setText(mPurchaseText);
                                 mStock.setNumberStock(numberStock);
+                                Date date = new Date();
+                                //Declare a date format to use on the date
+                                String dateFormat = "yyyy MMM dd hh:mm";
+                                //Get a string version of the data formated by the date format
+                                String purchaseDate = DateFormat.format(dateFormat, date)
+                                        .toString();
+                                mStock.setPurchaseDate(purchaseDate);
                                 mTotalStockPrice.setText(String.valueOf(numberStock * purchasePrice));
                                 mCurrentStockValue.setText(String.valueOf(numberStock * purchasePrice));
                                 mNumberStockLabel.setVisibility(View.VISIBLE);

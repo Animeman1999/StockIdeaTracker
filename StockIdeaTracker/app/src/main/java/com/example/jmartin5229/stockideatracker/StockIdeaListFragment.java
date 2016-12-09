@@ -75,7 +75,7 @@ public class StockIdeaListFragment extends Fragment {
             // >Set the widgets, using the passed in stock idea.
             mTitleTextView.setText(stockIdea.getName());
             mTickerTextView.setText(stockIdea.getTicker());
-            mDateTimeTextView.setText(stockIdea.getCreationDate().toString());
+            mDateTimeTextView.setText(stockIdea.getCreationDate());
             mCoordinatesTextView.setText(stockIdea.getCoordinates());
             if (stockIdea.getPicture()!= null){
                 int pictureId = getResources().getIdentifier(stockIdea.getPicture(), "drawable", "com.example.jmartin5229.stockideatracker");
