@@ -152,7 +152,8 @@ public class StockFragment extends Fragment {
             }
         });
 
-       // mPhotoView = (ImageView)v.findViewById(R.id.stock_idea_thumbnail);
+        //Needs to be initialized so not null when mPhotView is used in updatePhotoView();
+        mPhotoView = (ImageView)v.findViewById(R.id.stock_idea_thumbnail);
 
         updatePhotoView();
         if (canTakePhoto)
