@@ -1,14 +1,19 @@
 package com.example.jmartin5229.stockideatracker;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -30,6 +35,25 @@ import java.util.Date;
 import java.io.File;
 import java.util.UUID;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+import android.location.Location;
+
+import static android.content.Context.LOCATION_SERVICE;
+
+
 /**
  * Created by Jeff on 12/2/2016.
  */
@@ -42,6 +66,9 @@ public class StockFragment extends Fragment {
     final Intent pickStock = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_PHOTO = 2;
+    private LocationListener locationListener;
+    private LocationManager locationManager;
+    private String mGPSCoordinates;
 
     private Stock mStock;
 
@@ -65,12 +92,15 @@ public class StockFragment extends Fragment {
     private TextView mPurchaseDateLabel;
     private TextView mPurchaseDate;
 
+    private GoogleApiClient googleApiClient;
+
+
+    private Context mContext;
 
     private long mCreationDateLong;
     private File mPhotoFile;
 
-    public static StockFragment newInstance(UUID stockID)
-    {
+    public static StockFragment newInstance(UUID stockID) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_STOCK_ID, stockID);
 
@@ -85,9 +115,24 @@ public class StockFragment extends Fragment {
         super.onCreate(savedInstanceState);
         UUID stockID = (UUID) getArguments().getSerializable(ARG_STOCK_ID);
         mStock = StockApi.get(getActivity()).GetStock(stockID);
-        Log.d("Test", "666666666666666666666666666 StockFragment.java OnCreate - mStock.getPurchaseDate() = "+ mStock.getPurchaseDate() + "66666666666666666666666666666");
+        Log.d("Test", "666666666666666666666666666 StockFragment.java OnCreate - mStock.getPurchaseDate() = " + mStock.getPurchaseDate() + "66666666666666666666666666666");
         mPhotoFile = StockApi.get(getActivity()).getPhotoFile(mStock);
+        mContext = getContext();
+
+
        }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case 10:
+                if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+
+                }
+                return;
+        }
+    }
 
     @Nullable
     @Override
@@ -164,8 +209,40 @@ public class StockFragment extends Fragment {
         mPhotoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MainActivity mainActivity = new MainActivity();
                 startActivityForResult(captureImage, REQUEST_PHOTO);
 
+                locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
+                locationListener = new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        mGPSCoordinates = location.getLongitude() + ", " + location.getLatitude();
+                        if (mStock.getCoordinates() == null) {
+                            mStock.setCoordinates(mGPSCoordinates);
+                        }
+                        Log.e("Test", "00000000000000000000000000000000000 mGPSCoordinates = " + mGPSCoordinates + " stock.getCoordinates =" +
+                                mStock.getCoordinates());
+                    }
+
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String provider) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider) {
+
+                    }
+                };
+
+
+               // mStock.setCoordinates();
+               // mGPS.setText();
                 //******************************get a picture from the camera
                 //                               save picture into drawable folder
                 //                               save picture name to database

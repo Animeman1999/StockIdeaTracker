@@ -82,7 +82,7 @@ public class StockIdeaListFragment extends Fragment {
             mDateTimeTextView.setText(stockIdea.getCreationDate());
             mCoordinatesTextView.setText(stockIdea.getCoordinates());
             if (mPhotoFile == null || !mPhotoFile.exists()) {
-                mThumbnailImageView.setImageResource(R.drawable.take_a_picture);
+                mThumbnailImageView.setImageDrawable(null);
             } else {
                 Bitmap bitmap = PictureUtils.getScaledBitmap(
                         mPhotoFile.getPath(), 75, 75);

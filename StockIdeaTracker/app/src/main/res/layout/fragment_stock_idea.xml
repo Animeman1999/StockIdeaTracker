@@ -71,7 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/stock_idea_thumbnail"
-        android:layout_toRightOf="@+id/stock_idea_total_current_value_label"
+        android:layout_toRightOf="@+id/stock_idea_coordinates_label"
         android:text="@string/stock_idea_coordinates"/>
 
     <TextView
