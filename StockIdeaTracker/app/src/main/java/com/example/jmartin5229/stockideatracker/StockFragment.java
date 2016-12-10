@@ -212,33 +212,7 @@ public class StockFragment extends Fragment {
                 MainActivity mainActivity = new MainActivity();
                 startActivityForResult(captureImage, REQUEST_PHOTO);
 
-                locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
-                locationListener = new LocationListener() {
-                    @Override
-                    public void onLocationChanged(Location location) {
-                        mGPSCoordinates = location.getLongitude() + ", " + location.getLatitude();
-                        if (mStock.getCoordinates() == null) {
-                            mStock.setCoordinates(mGPSCoordinates);
-                        }
-                        Log.e("Test", "00000000000000000000000000000000000 mGPSCoordinates = " + mGPSCoordinates + " stock.getCoordinates =" +
-                                mStock.getCoordinates());
-                    }
 
-                    @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                    }
-
-                    @Override
-                    public void onProviderEnabled(String provider) {
-
-                    }
-
-                    @Override
-                    public void onProviderDisabled(String provider) {
-
-                    }
-                };
 
 
                // mStock.setCoordinates();

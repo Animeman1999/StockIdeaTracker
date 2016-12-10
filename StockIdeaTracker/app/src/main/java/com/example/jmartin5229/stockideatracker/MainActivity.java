@@ -37,8 +37,9 @@ public class MainActivity extends AppCompatActivity {
     private LocationListener locationListener;
     private LocationManager locationManager;
     public String  mGPSCoordinates;
-    private static int PERMISSION_ACCESS_COARSE_LOCATION = 10;
-    /**
+    private static final int LOCATIONS_PERMISSION_REQUEST_CODE = 10;
+
+        /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onLocationChanged(Location location) {
                 mGPSCoordinates = location.getLongitude() + ", " + location.getLatitude();
-                Log.e("Test", "99999999999999999999999999 getting = " + mGPSCoordinates );
+                //Log.d("Test", "99999999999999999999999999 getting = " + mGPSCoordinates );
             }
 
             @Override
@@ -87,16 +88,22 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        //Find out if the API build being used is API 23 or larger.
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //Check to see if app has NOT been given permission from the user to to use the services.
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{
+                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED){
+                requestPermissions(new String[]
+            {// As permission has NOT been given, ask the user for permission, this permission granted request code will be using
+                    //LOCATIONS_PERMISSION_REQUEST_CODE that was set to a constant integer value. Can be any integer value I chose 10.
+                    //If multiple permissions are asked, each one needs a different integer value.
                         Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET
-
-                }, 10);
+                }, LOCATIONS_PERMISSION_REQUEST_CODE);
 
                 return;
             } else {
+                // As permission was granted, can use the service
                 locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
                 Log.e("Test", "99999999999999999999999999 getting gps ");
             }
@@ -131,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
-            case 10:
+            case LOCATIONS_PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // All good!
                 } else {
@@ -162,8 +169,6 @@ public class MainActivity extends AppCompatActivity {
                 if (stock.getCoordinates() == null) {
                     stock.setCoordinates(mGPSCoordinates);
                 }
-                Log.e("Test", "00000000000000000000000000000000000 mGPSCoordinates = " + mGPSCoordinates + " stock.getCoordinates =" +
-                        stock.getCoordinates());
                 StockApi.get(this).AddStock(stock);
 
                 Intent intent = StockActivity.newIntent(this,stock.getUUID());
