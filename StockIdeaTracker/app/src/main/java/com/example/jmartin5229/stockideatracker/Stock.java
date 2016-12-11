@@ -121,9 +121,9 @@ public class Stock {
         //Get a string version of the data formated by the date format
         mCreationDate = DateFormat.format(dateFormat, date)
                 .toString();
-        Log.d("Check","#######################public Stock (UUID id){\n" +
-                "        mUUID = id;\n" +
-                "        mCreationDate = new Date();" + date +  " mCreationDate " + mCreationDate + " ############################");
+        //Log.d("Check","#######################public Stock (UUID id){\n" +
+        //        "        mUUID = id;\n" +
+        //        "        mCreationDate = new Date();" + date +  " mCreationDate " + mCreationDate + " ############################");
     }
 
 
