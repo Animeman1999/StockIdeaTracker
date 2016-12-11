@@ -72,7 +72,7 @@ public class StockFragment extends Fragment {
 
     private Stock mStock;
 
-    private EditText mIdeaTitle;
+    private TextView mIdeaTitle;
     private TextView mTicker;
     private TextView mDateAdded;
     private EditText mDescription;
@@ -115,7 +115,7 @@ public class StockFragment extends Fragment {
         super.onCreate(savedInstanceState);
         UUID stockID = (UUID) getArguments().getSerializable(ARG_STOCK_ID);
         mStock = StockApi.get(getActivity()).GetStock(stockID);
-        Log.d("Test", "666666666666666666666666666 StockFragment.java OnCreate - mStock.getPurchaseDate() = " + mStock.getPurchaseDate() + "66666666666666666666666666666");
+        //Log.d("Test", "666666666666666666666666666 StockFragment.java OnCreate - mStock.getPurchaseDate() = " + mStock.getPurchaseDate() + "66666666666666666666666666666");
         mPhotoFile = StockApi.get(getActivity()).getPhotoFile(mStock);
         mContext = getContext();
 
@@ -149,32 +149,15 @@ public class StockFragment extends Fragment {
         if(packageManager.resolveActivity(pickStock,PackageManager.MATCH_DEFAULT_ONLY)== null){
 
         }
-        mIdeaTitle = (EditText)v.findViewById(R.id.stock_idea_title);
+        mIdeaTitle = (TextView) v.findViewById(R.id.stock_idea_title);
         mIdeaTitle.setText(mStock.getName());
-        mIdeaTitle.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mStock.setName(s.toString());
-                /// ************************************************************Need to add ticker from Yahoo.
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
 
         mTicker = (TextView)v.findViewById(R.id.stock_idea_ticker);
         mTicker.setText(mStock.getTicker());
 
         String creationDate =  mStock.getCreationDate();
-        Log.e("Test", "666666666666666666666666666 OnCreateView - creationDate =" + creationDate + "6666666666666666666666666");
-        Log.e("Test", "666666666666666666666666666 OnCreateView - creationDate.toString() =" + creationDate + "6666666666666666666666666");
+        //Log.e("Test", "666666666666666666666666666 OnCreateView - creationDate =" + creationDate + "6666666666666666666666666");
+        //Log.e("Test", "666666666666666666666666666 OnCreateView - creationDate.toString() =" + creationDate + "6666666666666666666666666");
         mDateAdded = (TextView)v.findViewById(R.id.stock_idea_creation_date);
         mDateAdded.setText( creationDate);
         mCurrentStockValue = (TextView) v.findViewById(R.id.stock_idea_total_current_value);

@@ -2,6 +2,7 @@ package com.example.jmartin5229.stockideatracker;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -16,18 +17,25 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.util.Date;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private LocationManager locationManager;
     public String  mGPSCoordinates;
     private static final int LOCATIONS_PERMISSION_REQUEST_CODE = 10;
+    StockFetcher stockFetcher = new StockFetcher();
 
         /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -63,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         googleApiClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+
+
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -108,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("Test", "99999999999999999999999999 getting gps ");
                 }
         }
-
     }
 
 
@@ -171,15 +182,20 @@ public class MainActivity extends AppCompatActivity {
             case R.id.add_new_stock_idea:
                 mSubtitleVisible = 2;
                 updateSubtitle();
-                Stock stock = new Stock();
-                if (stock.getCoordinates() == null) {
-                    stock.setCoordinates(mGPSCoordinates);
+                String uuidString = GetStockSymbol();
+                if (uuidString != ""){
+                    UUID uuid = UUID.fromString( uuidString) ;
+                    Stock stock = new Stock(uuid);
+                    if (stock.getCoordinates() == null) {
+                        stock.setCoordinates(mGPSCoordinates);
+                    }
+                    StockApi.get(this).AddStock(stock);
+
+                    Intent intent = StockActivity.newIntent(this,stock.getUUID());
+
+                    startActivity(intent);
                 }
-                StockApi.get(this).AddStock(stock);
 
-                Intent intent = StockActivity.newIntent(this,stock.getUUID());
-
-                startActivity(intent);
                 break;
             case R.id.portfolio_summary:
                 mSubtitleVisible = 3;
@@ -251,5 +267,43 @@ public class MainActivity extends AppCompatActivity {
         AppIndex.AppIndexApi.end(googleApiClient, viewAction);
         googleApiClient.disconnect();
         super.onStop();
+    }
+
+    public String GetStockSymbol()
+    {
+        Log.d("Test", "--------------------------Enter GetStockSymbol");
+        final Context context = this;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter the stock symbol.");
+
+        final EditText input = new EditText(this);
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String stockSymbol = input.getText().toString();
+                if(stockSymbol != "") {
+                    String UUIDString = stockFetcher.fetchStockPriceName(stockSymbol);
+                   if ( UUIDString == ""){
+                       Toast.makeText(context, stockSymbol + "Not a valid stock symbol", Toast.LENGTH_LONG);
+                       input.setText("");
+                   }else {
+                       input.setText(UUIDString);
+                   };
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+
+        Log.d("Test", "--------------------------Exiting GetStockSymbol string being returned = " + input.getText().toString());
+        return input.getText().toString();
     }
 }

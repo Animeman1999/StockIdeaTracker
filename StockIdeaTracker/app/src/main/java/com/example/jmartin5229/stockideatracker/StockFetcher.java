@@ -21,6 +21,8 @@ public class StockFetcher {
 
     private byte[] getUrlBytes(String urlSpec) throws IOException
     {
+
+        Log.d("Test", "+++++++++++++++++++++++++++++++++++  Enter getUrlBytes");
         //Create a new URL object from the url string that was passed in
         URL url = new URL(urlSpec);
 
@@ -69,20 +71,24 @@ public class StockFetcher {
     }
 
     private String getUrlString(String urlSpec) throws IOException {
+        Log.d("Test", "+++++++++++++++++++++++++++++++++++  Enter getUrlString");
         return new String(getUrlBytes(urlSpec));
     }
 
-    public boolean fetchStockPriceName(Stock stock) {
+
+    public String fetchStockPriceName(String stockSymbol) {
         //This is the method that will take the original URL and allow
         //us to add any parameters that might be required to it.
         //For the URL's on my server there are no additional parameters
         //needed. However many API's require extra parameters and this
         //is where they add them.
+        Log.d("Test", "+++++++++++++++++++++++++++++++++++  Enter fetchStockPriceName");
+        String UUIDString;
 
         try {
 
             String url = Uri.parse("http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20%3D'" +
-                    stock.getTicker() + "'&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&format=json")
+                    stockSymbol + "'&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&format=json")
                     .buildUpon()
                     //Add extra parameters here with the method
                     //.appendQueryParameter("param", "Value")
@@ -98,25 +104,28 @@ public class StockFetcher {
             JSONObject jsonObject = new JSONObject(jsonString);
 
             //Parse the stock out from the object.
-            parseStock(stock, jsonObject);
+            UUIDString = parseStock(jsonObject);
 
             Log.i(TAG, "Fetched contents of URL: " + jsonString);
         } catch (JSONException jse) {
             Log.e(TAG, "Failed to parse JSON", jse);
-            return false;
+            return "";
         } catch (IOException ioe) {
             Log.e(TAG, "Failed to load", ioe);
-            return false;
+            return "";
         }
 
-        return true;
+        return UUIDString;
     }
 
-    private void parseStock(Stock stock, JSONObject jsonObject)
+    private String parseStock(JSONObject jsonObject)
             throws IOException, JSONException {
 
+        Log.d("Test", "+++++++++++++++++++++++++++++++++++  Enter parseStock");
+        Stock stock = new Stock();
         stock.setPurchasePrice(jsonObject.getDouble("LastTradePriceOnly"));
         stock.setName(jsonObject.getString("Name"));
 
+        return stock.getUUID().toString();
     }
 }
