@@ -91,23 +91,24 @@ public class MainActivity extends AppCompatActivity {
         //Find out if the API build being used is API 23 or larger.
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //Check to see if app has NOT been given permission from the user to to use the services.
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED){
-                requestPermissions(new String[]
-            {// As permission has NOT been given, ask the user for permission, this permission granted request code will be using
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.
+                    ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat
+                    .checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                    // As permission has NOT been given, ask the user for permission, this permission granted request code will be using
                     //LOCATIONS_PERMISSION_REQUEST_CODE that was set to a constant integer value. Can be any integer value I chose 10.
                     //If multiple permissions are asked, each one needs a different integer value.
-                        Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET
-                }, LOCATIONS_PERMISSION_REQUEST_CODE);
+                    requestPermissions( new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET
+                    }, LOCATIONS_PERMISSION_REQUEST_CODE);
 
-                return;
-            } else {
-                // As permission was granted, can use the service
-                locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
-                Log.e("Test", "99999999999999999999999999 getting gps ");
-            }
+                    return;
+                } else {
+                    locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
+                    Log.e("Test", "99999999999999999999999999 getting gps ");
+                }
         }
+
     }
 
 
@@ -140,7 +141,12 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case LOCATIONS_PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // All good!
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.
+                            ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat
+                            .checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                            PackageManager.PERMISSION_GRANTED){
+                        locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
+                    }
                 } else {
                     Toast.makeText(this, "Need your location!", Toast.LENGTH_SHORT).show();
                 }
