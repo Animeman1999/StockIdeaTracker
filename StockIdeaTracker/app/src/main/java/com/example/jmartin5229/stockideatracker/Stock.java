@@ -20,6 +20,7 @@ public class Stock {
     private String  mDescription;
     private String  mPicture;
     private String  mCoordinates;
+    private double mCurrentPrice;
     private double  mPurchasePrice;
     private int mNumberStock;
     private String mPurchaseDate;
@@ -110,6 +111,14 @@ public class Stock {
 
     public Stock (){
         this(UUID.randomUUID());
+    }
+
+    public double getCurrentPrice() {
+        return mCurrentPrice;
+    }
+
+    public void setCurrentPrice(double currentPrice) {
+        mCurrentPrice = currentPrice;
     }
 
     public Stock (UUID id){

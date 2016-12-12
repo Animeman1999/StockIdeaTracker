@@ -4,37 +4,52 @@
                 android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/stock_idea_ticker_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stock_idea_ticker_label"/>
+
+    <EditText
+        android:id="@+id/stock_idea_ticker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stock_idea_ticker_label"
+        android:text="@string/stock_idea_ticker"/>
+
+    <Button
+        android:id="@+id/validate_symbol_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stock_idea_ticker"
+        android:text="@string/validate_symbol_button"/>
+
+    <TextView
         android:id="@+id/stock_idea_title_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/stock_idea_ticker"
         android:text="@string/stock_idea_title_label"/>
 
-    <TextureView
+    <TextView
         android:id="@+id/stock_idea_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/stock_idea_title"
+        android:layout_below="@+id/stock_idea_ticker"
         android:layout_toRightOf="@+id/stock_idea_title_label"/>
-
-    <TextView
-        android:id="@+id/stock_idea_ticker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/stock_idea_title"
-        android:text="@string/stock_idea_ticker"/>
 
     <TextView
         android:id="@+id/stock_idea_creation_date_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/stock_idea_ticker"
+        android:layout_below="@+id/stock_idea_title_label"
         android:text="@string/stock_idea_creation_date_label"/>
 
     <TextView
         android:id="@+id/stock_idea_creation_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/stock_idea_ticker"
+        android:layout_below="@+id/stock_idea_title_label"
         android:layout_toRightOf="@+id/stock_idea_creation_date_label"
         android:text="@string/stock_idea_creation_date"/>
     <TextView
@@ -167,7 +182,7 @@
         android:id="@+id/stock_purchase_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/stock_idea_number_of_stock_purchased_label"
+        android:layout_below="@+id/stock_idea_current_price_label"
         android:text="@string/stock_purchase_button"/>
 
 </RelativeLayout>

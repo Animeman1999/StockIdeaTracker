@@ -69,15 +69,21 @@ public class StockFragment extends Fragment {
     private LocationListener locationListener;
     private LocationManager locationManager;
     private String mGPSCoordinates;
+    StockFetcher stockFetcher = new StockFetcher();
 
     private Stock mStock;
 
     private TextView mIdeaTitle;
-    private TextView mTicker;
+    private TextView mIdeaTitleLable;
+    private EditText mTicker;
+    private TextView mDateAddedLabel;
     private TextView mDateAdded;
+    private TextView mDescriptionLable;
     private EditText mDescription;
     private ImageView mPhotoView;
+    private TextView mGPSLabel;
     private TextView mGPS;
+    private TextView mPurchasePriceLabel;
     private TextView mPurchasePrice;
     private TextView mNumberStockLabel;
     private TextView mNumberStock;
@@ -91,6 +97,8 @@ public class StockFragment extends Fragment {
     private String mPurchaseText = "";
     private TextView mPurchaseDateLabel;
     private TextView mPurchaseDate;
+    private Button mValidateSymbolButton;
+    private String mUserInput;
 
     private GoogleApiClient googleApiClient;
 
@@ -149,19 +157,73 @@ public class StockFragment extends Fragment {
         if(packageManager.resolveActivity(pickStock,PackageManager.MATCH_DEFAULT_ONLY)== null){
 
         }
+        mIdeaTitleLable = (TextView)v.findViewById(R.id.stock_idea_title_label);
         mIdeaTitle = (TextView) v.findViewById(R.id.stock_idea_title);
         mIdeaTitle.setText(mStock.getName());
 
-        mTicker = (TextView)v.findViewById(R.id.stock_idea_ticker);
+        final String mSmbol = mStock.getTicker();
+        mTicker = (EditText) v.findViewById(R.id.stock_idea_ticker);
         mTicker.setText(mStock.getTicker());
+        mTicker.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mUserInput = s.toString();
+
+            }
+        });
+
+        mValidateSymbolButton = (Button)v.findViewById(R.id.validate_symbol_button);
+        mValidateSymbolButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mUserInput != ""){
+                    Stock stock = stockFetcher.fetchStockPriceName(mUserInput, getContext());
+                    if ( stock == null){
+                        Toast.makeText(getContext(), mUserInput + "Not a valid stock symbol", Toast.LENGTH_LONG);
+                        mValidateSymbolButton.setText(mUserInput + " is not a valid stock symbol. \n Validate stock Symbol");
+                        mTicker.setText("");
+                    }else {
+                        mStock.setName(stock.getName());
+                        mStock.setCurrentPrice(stock.getCurrentPrice());
+                        mPurchasePrice.setText(String.valueOf(mStock.getCurrentPrice()));
+                        mIdeaTitle.setText(mStock.getName());
+                        mValidateSymbolButton.setVisibility(View.GONE);
+                        mPurchaseButton.setVisibility(View.VISIBLE);
+                        mIdeaTitle.setVisibility(View.VISIBLE);
+                        mIdeaTitleLable.setVisibility(View.VISIBLE);
+                        mIdeaTitleLable.setVisibility(View.VISIBLE);
+                        mIdeaTitle.setVisibility(View.VISIBLE);
+                        mPhotoView.setVisibility(View.VISIBLE);
+                        mGPSLabel.setVisibility(View.VISIBLE);
+                        mGPS.setVisibility(View.VISIBLE);
+                        mDescriptionLable.setVisibility(View.VISIBLE);
+                        mDescription.setVisibility(View.VISIBLE);
+                        mCurrentStockPriceLabel.setVisibility(View.VISIBLE);
+                        mCurrentStockPrice.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
 
         String creationDate =  mStock.getCreationDate();
         //Log.e("Test", "666666666666666666666666666 OnCreateView - creationDate =" + creationDate + "6666666666666666666666666");
         //Log.e("Test", "666666666666666666666666666 OnCreateView - creationDate.toString() =" + creationDate + "6666666666666666666666666");
+        mDateAddedLabel = (TextView)v.findViewById(R.id.stock_idea_creation_date_label);
         mDateAdded = (TextView)v.findViewById(R.id.stock_idea_creation_date);
         mDateAdded.setText( creationDate);
         mCurrentStockValue = (TextView) v.findViewById(R.id.stock_idea_total_current_value);
 
+        mDescriptionLable = (TextView)v.findViewById(R.id.stock_idea_description_label);
         mDescription =(EditText)v.findViewById(R.id.stock_idea_description);
         mDescription.setText(mStock.getDescription());
         mDescription.addTextChangedListener(new TextWatcher() {
@@ -214,10 +276,11 @@ public class StockFragment extends Fragment {
 
         });
 
-
+        mGPSLabel = (TextView)v.findViewById(R.id.stock_idea_coordinates_label);
         mGPS = (TextView)v.findViewById(R.id.stock_idea_coordinates);
         mGPS.setText(mStock.getCoordinates());
 
+        mPurchasePriceLabel = (TextView) v.findViewById(R.id.stock_idea_purchase_price_label);
         mPurchasePrice = (TextView)v.findViewById(R.id.stock_idea_purchase_price);
         final Double purchasePrice = mStock.getPurchasePrice();
         mPurchasePrice.setText(String.valueOf( purchasePrice));
@@ -263,8 +326,9 @@ public class StockFragment extends Fragment {
                                 String purchaseDate = DateFormat.format(dateFormat, date)
                                         .toString();
                                 mStock.setPurchaseDate(purchaseDate);
-                                mTotalStockPrice.setText(String.valueOf(numberStock * purchasePrice));
-                                mCurrentStockValue.setText(String.valueOf(numberStock * purchasePrice));
+                                mTotalStockPrice.setText(String.valueOf(numberStock * mStock.getCurrentPrice()));
+                                mCurrentStockValue.setText(String.valueOf(numberStock * mStock.getCurrentPrice()));
+                                mCurrentStockPrice.setText(String.valueOf(mStock.getCurrentPrice()));
                                 mNumberStockLabel.setVisibility(View.VISIBLE);
                                 mNumberStock.setVisibility(View.VISIBLE);
                                 mTotalStockPriceLabel.setVisibility(View.VISIBLE);
@@ -296,6 +360,7 @@ public class StockFragment extends Fragment {
             }
         });
 
+
         if (numberStock <= 0)
         {
             mNumberStockLabel.setVisibility(View.GONE);
@@ -320,6 +385,21 @@ public class StockFragment extends Fragment {
             mCurrentStockPrice.setText(String.valueOf(currentPrice));
 
             mCurrentStockValue.setText(String.valueOf(currentPrice * numberStock));
+        }
+
+        if(mStock.getTicker() == null){
+            mPurchaseButton.setVisibility(View.GONE);
+            mIdeaTitle.setVisibility(View.GONE);
+            mIdeaTitleLable.setVisibility(View.GONE);
+            mIdeaTitleLable.setVisibility(View.GONE);
+            mIdeaTitle.setVisibility(View.GONE);
+            mPhotoView.setVisibility(View.GONE);
+            mGPSLabel.setVisibility(View.GONE);
+            mGPS.setVisibility(View.GONE);
+            mPurchasePriceLabel.setVisibility(View.GONE);
+            mPurchasePrice.setVisibility(View.GONE);
+            mDescriptionLable.setVisibility(View.GONE);
+            mDescription.setVisibility(View.GONE);
         }
 
         return v;
@@ -348,4 +428,47 @@ public class StockFragment extends Fragment {
             mPhotoView.setImageBitmap(bitmap);
         }
     }
+//    public void GetStockSymbol()
+//    {
+//
+//        Log.d("Test", "--------------------------Enter GetStockSymbol");
+//        mStockSymbol = "";
+//        final Context context = this;
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("Enter the stock symbol.");
+//
+//        final EditText input = new EditText(this);
+//        builder.setView(input);
+//
+//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                mStockSymbol = input.getText().toString();
+//                response = true;
+//                if(mStockSymbol != "") {
+//                    String UUIDString = stockFetcher.fetchStockPriceName(mStockSymbol, context);
+//                    if ( UUIDString == ""){
+//                        Toast.makeText(context, mStockSymbol + "Not a valid stock symbol", Toast.LENGTH_LONG);
+//                        input.setText("");
+//                    }else {
+//                        input.setText(UUIDString);
+//                    };
+//                }
+//            }
+//        });
+//        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                response = true;
+//                dialog.cancel();
+//            }
+//        });
+//
+//        builder.show();
+//
+//
+//        Log.d("Test", "--------------------------Exiting GetStockSymbol string being returned = " + mStockSymbol);
+//
+//
+//    }
 }

@@ -99,14 +99,14 @@ public class StockFetcher {
     }
 
 
-    public String fetchStockPriceName(String stockSymbol, Context context) {
+    public Stock fetchStockPriceName(String stockSymbol, Context context) {
         //This is the method that will take the original URL and allow
         //us to add any parameters that might be required to it.
         //For the URL's on my server there are no additional parameters
         //needed. However many API's require extra parameters and this
         //is where they add them.
         Log.d("Test", "+++++++++++++++++++++++++++++++++++  Enter fetchStockPriceName stockSymbol passed in is + " + stockSymbol);
-        String UUIDString;
+        Stock stock;
         try {
 
             String url = Uri.parse("http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20%3D'" +
@@ -128,21 +128,20 @@ public class StockFetcher {
             JSONObject jsonObject = new JSONObject(jsonString);
 
             //Parse the stock out from the object.
-            UUIDString = parseStock(jsonObject);
+            stock = parseStock(jsonObject);
 
-            Log.i(TAG, "++++++++++++++++++++++++++++++ParsedStock to UUIDString = " + UUIDString);
         } catch (JSONException jse) {
             Log.e(TAG, "+++++++++++++++++++++++++++++++++Failed to parse JSON", jse);
-            return "";
+            return null;
         } catch (IOException ioe) {
             Log.e(TAG, "++++++++++++++++++++++++++++++++++++Failed to load", ioe);
-            return "";
+            return null;
         }
 
-        return UUIDString;
+        return stock;
     }
 
-    private String parseStock(JSONObject jsonObject)
+    private Stock parseStock(JSONObject jsonObject)
             throws IOException, JSONException {
         //Log.d("Test", "+++++++++++++++++++++++++++++++++++  Enter parseStock jsonObjec = " + jsonObject);
         JSONObject query = jsonObject.getJSONObject("query");
@@ -156,9 +155,9 @@ public class StockFetcher {
         stock.setName(name);
         Double price = quote.getDouble("LastTradePriceOnly");
         Log.d("Test", "+++++++++++++++++++++++++++++++++++++++++++++ quote = " + price );
-        stock.setPurchasePrice(price);
+        stock.setCurrentPrice(price);
 
         Log.d("Test", "+++++++++++++++++++++++++++++++++++++++++++++ stock UUID = " + stock.getUUID() );
-        return stock.getUUID().toString();
+        return stock;
     }
 }

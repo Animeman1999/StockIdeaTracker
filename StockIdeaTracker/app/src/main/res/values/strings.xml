@@ -29,4 +29,5 @@
     <string name="save_idea_button">Save Stock Idea</string>
     <string name="stock_purchase_date_label">Date Stock Purchased: </string>
     <string name="stock_purchase_date">12/11/2016</string>
+    <string name="validate_symbol_button">Validates Stock Symbol</string>
 </resources>

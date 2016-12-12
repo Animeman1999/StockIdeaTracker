@@ -48,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
     public String  mGPSCoordinates;
     private static final int LOCATIONS_PERMISSION_REQUEST_CODE = 10;
     private static final int INTERNET_PERMISSION_REQUEST_CODE = 20;
-    StockFetcher stockFetcher = new StockFetcher();
+    private String mStockSymbol;
+    private boolean response = false;
 
         /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -199,40 +200,17 @@ public class MainActivity extends AppCompatActivity {
             case R.id.add_new_stock_idea:
                 mSubtitleVisible = 2;
                 updateSubtitle();
-                String uuidString = GetStockSymbol();
-                Log.d("Test", "++++++++++++++++++++++++++++++++++ uuidString = #" + uuidString + "#");
-                if (uuidString == "")
-                {
-                    Log.d("Test", "++++++++++++++++++++++++++++++++++ uuidString test shows empty");
-                }else {
-                    Log.d("Test", "++++++++++++++++++++++++++++++++++ uuidString test shows somthing");
-                }
-                if (uuidString == null)
-                {
-                    Log.d("Test", "++++++++++++++++++++++++++++++++++ uuidString test shows null");
-                }else {
-                    Log.d("Test", "++++++++++++++++++++++++++++++++++ uuidString test shows not null");
-                }
 
-                if (uuidString.isEmpty())
-                {
-                    Log.d("Test", "++++++++++++++++++++++++++++++++++ uuidString test shows isEmpty");
-                }else {
-                    Log.d("Test", "++++++++++++++++++++++++++++++++++ uuidString test shows not isEmpty");
+                Stock stock = new Stock();
+                if (stock.getCoordinates() == null) {
+                    stock.setCoordinates(mGPSCoordinates);
                 }
+                StockApi.get(this).AddStock(stock);
 
-                if (!uuidString.isEmpty() && uuidString != null){
-                    UUID uuid = UUID.fromString( uuidString) ;
-                    Stock stock = new Stock(uuid);
-                    if (stock.getCoordinates() == null) {
-                        stock.setCoordinates(mGPSCoordinates);
-                    }
-                    StockApi.get(this).AddStock(stock);
+                Intent intent = StockActivity.newIntent(this,stock.getUUID());
 
-                    Intent intent = StockActivity.newIntent(this,stock.getUUID());
+                startActivity(intent);
 
-                    startActivity(intent);
-                }
 
                 break;
             case R.id.portfolio_summary:
@@ -307,43 +285,5 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    public String GetStockSymbol()
-    {
-        Log.d("Test", "--------------------------Enter GetStockSymbol");
-        String returnString = "";
-        final Context context = this;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Enter the stock symbol.");
 
-        final EditText input = new EditText(this);
-        builder.setView(input);
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String stockSymbol = input.getText().toString();
-                if(stockSymbol != "") {
-                    String UUIDString = stockFetcher.fetchStockPriceName(stockSymbol, context);
-                   if ( UUIDString == ""){
-                       Toast.makeText(context, stockSymbol + "Not a valid stock symbol", Toast.LENGTH_LONG);
-                       input.setText("");
-                   }else {
-                       input.setText(UUIDString);
-                   };
-                }
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
-
-        Log.d("Test", "--------------------------Exiting GetStockSymbol string being returned = " + input.getText().toString());
-        returnString = input.getText().toString();
-        return returnString;
-    }
 }
