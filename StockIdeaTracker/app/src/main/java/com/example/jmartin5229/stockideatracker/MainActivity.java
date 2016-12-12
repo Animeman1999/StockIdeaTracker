@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private LocationManager locationManager;
     public String  mGPSCoordinates;
     private static final int LOCATIONS_PERMISSION_REQUEST_CODE = 10;
+    private static final int INTERNET_PERMISSION_REQUEST_CODE = 20;
     StockFetcher stockFetcher = new StockFetcher();
 
         /**
@@ -60,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment_single);
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         // >Get the fragment manager from the activity.
         FragmentManager fm = getSupportFragmentManager();
         // >Get the current fragment from the frame layout. (null when first starting app)
@@ -72,9 +77,6 @@ public class MainActivity extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         googleApiClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
-
-
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -106,19 +108,34 @@ public class MainActivity extends AppCompatActivity {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.
                     ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat
                     .checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                    PackageManager.PERMISSION_GRANTED) {
-                    // As permission has NOT been given, ask the user for permission, this permission granted request code will be using
-                    //LOCATIONS_PERMISSION_REQUEST_CODE that was set to a constant integer value. Can be any integer value I chose 10.
-                    //If multiple permissions are asked, each one needs a different integer value.
-                    requestPermissions( new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET
-                    }, LOCATIONS_PERMISSION_REQUEST_CODE);
+                    PackageManager.PERMISSION_GRANTED ){
+                // As permission has NOT been given, ask the user for permission, this permission granted request code will be using
+                //LOCATIONS_PERMISSION_REQUEST_CODE that was set to a constant integer value. Can be any integer value I chose 10.
+                //If multiple permissions are asked, each one needs a different integer value.
+                requestPermissions( new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                }, LOCATIONS_PERMISSION_REQUEST_CODE);
 
-                    return;
-                } else {
-                    locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
-                    Log.e("Test", "99999999999999999999999999 getting gps ");
-                }
+
+              //  return;
+            } else {
+                locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
+                Log.e("Test", "99999999999999999999999999 getting gps ");
+            }
+        }
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //Check to see if app has NOT been given permission from the user to to use the services.
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED ){
+                // As permission has NOT been given, ask the user for permission, this permission granted request code will be using
+                //LOCATIONS_PERMISSION_REQUEST_CODE that was set to a constant integer value. Can be any integer value I chose 10.
+                //If multiple permissions are asked, each one needs a different integer value.
+                requestPermissions( new String[]{ Manifest.permission.INTERNET
+                }, INTERNET_PERMISSION_REQUEST_CODE);
+
+
+                return;
+            }
         }
     }
 
@@ -183,7 +200,28 @@ public class MainActivity extends AppCompatActivity {
                 mSubtitleVisible = 2;
                 updateSubtitle();
                 String uuidString = GetStockSymbol();
-                if (uuidString != ""){
+                Log.d("Test", "++++++++++++++++++++++++++++++++++ uuidString = #" + uuidString + "#");
+                if (uuidString == "")
+                {
+                    Log.d("Test", "++++++++++++++++++++++++++++++++++ uuidString test shows empty");
+                }else {
+                    Log.d("Test", "++++++++++++++++++++++++++++++++++ uuidString test shows somthing");
+                }
+                if (uuidString == null)
+                {
+                    Log.d("Test", "++++++++++++++++++++++++++++++++++ uuidString test shows null");
+                }else {
+                    Log.d("Test", "++++++++++++++++++++++++++++++++++ uuidString test shows not null");
+                }
+
+                if (uuidString.isEmpty())
+                {
+                    Log.d("Test", "++++++++++++++++++++++++++++++++++ uuidString test shows isEmpty");
+                }else {
+                    Log.d("Test", "++++++++++++++++++++++++++++++++++ uuidString test shows not isEmpty");
+                }
+
+                if (!uuidString.isEmpty() && uuidString != null){
                     UUID uuid = UUID.fromString( uuidString) ;
                     Stock stock = new Stock(uuid);
                     if (stock.getCoordinates() == null) {
@@ -272,6 +310,7 @@ public class MainActivity extends AppCompatActivity {
     public String GetStockSymbol()
     {
         Log.d("Test", "--------------------------Enter GetStockSymbol");
+        String returnString = "";
         final Context context = this;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enter the stock symbol.");
@@ -284,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String stockSymbol = input.getText().toString();
                 if(stockSymbol != "") {
-                    String UUIDString = stockFetcher.fetchStockPriceName(stockSymbol);
+                    String UUIDString = stockFetcher.fetchStockPriceName(stockSymbol, context);
                    if ( UUIDString == ""){
                        Toast.makeText(context, stockSymbol + "Not a valid stock symbol", Toast.LENGTH_LONG);
                        input.setText("");
@@ -304,6 +343,7 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
 
         Log.d("Test", "--------------------------Exiting GetStockSymbol string being returned = " + input.getText().toString());
-        return input.getText().toString();
+        returnString = input.getText().toString();
+        return returnString;
     }
 }
