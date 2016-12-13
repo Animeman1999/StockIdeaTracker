@@ -193,10 +193,10 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.list_of_stock_ideas:
-                mSubtitleVisible = 1;
-                updateSubtitle();
-                break;
+//            case R.id.list_of_stock_ideas:
+//                mSubtitleVisible = 1;
+//                updateSubtitle();
+//                break;
             case R.id.add_new_stock_idea:
                 mSubtitleVisible = 2;
                 updateSubtitle();
@@ -214,8 +214,7 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
             case R.id.portfolio_summary:
-                mSubtitleVisible = 3;
-                updateSubtitle();
+                showMessage("Summary Report", StockApi.get(this).getReport(this));
                 break;
         }
 
@@ -285,5 +284,12 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    public void showMessage(String title, String message){  //Generic method to create a dialog and display it
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true)
+                .setTitle(title)
+                .setMessage(message)
+                .show();
+    }
 
 }

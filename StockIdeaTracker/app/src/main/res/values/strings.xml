@@ -31,4 +31,10 @@
     <string name="stock_purchase_date">12/11/2016</string>
     <string name="validate_symbol_button">Validates Stock Symbol</string>
     <string name="profit_loss">yup</string>
+    <string name="summary_report_label">Summary Report</string>
+    <string name="total_cost_of_all_stocks_label">Total Cost of All Stocks : $</string>
+    <string name="total_cost_of_all_stocks">12.45</string>
+    <string name="total_value_of_all_stocks_label">Total Value of All Stock : $</string>
+    <string name="total_value_of_all_stocks">30.12</string>
+    <string name="total_profit_loss_of_all_stocks_label">Total Profit/Loss of the stocks</string>
 </resources>

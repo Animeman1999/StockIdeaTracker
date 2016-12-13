@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.app.Fragment;
 
+import java.text.NumberFormat;
 import java.util.Date;
 import java.io.File;
 import java.util.UUID;
@@ -86,6 +87,7 @@ public class StockFragment extends Fragment {
 
     private GoogleApiClient googleApiClient;
 
+    NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
     private Context mContext;
 
@@ -185,7 +187,7 @@ public class StockFragment extends Fragment {
                         mTicker.setVisibility(View.GONE);
                         mStock.setName(stock.getName());
                         mStock.setCurrentPrice(stock.getCurrentPrice());
-                        mCurrentStockPrice.setText(String.valueOf(stock.getCurrentPrice()));
+                        mCurrentStockPrice.setText(formatter.format(stock.getCurrentPrice()));
                         mIdeaTitle.setText(mStock.getName());
                         mValidateSymbolButton.setVisibility(View.GONE);
                         mPurchaseButton.setVisibility(View.VISIBLE);
@@ -273,7 +275,7 @@ public class StockFragment extends Fragment {
         mPurchasePriceLabel = (TextView) v.findViewById(R.id.stock_idea_purchase_price_label);
         mPurchasePrice = (TextView)v.findViewById(R.id.stock_idea_purchase_price);
         final Double purchasePrice = mStock.getPurchasePrice();
-        mPurchasePrice.setText(String.valueOf( purchasePrice));
+        mPurchasePrice.setText(formatter.format( purchasePrice));
 
         mNumberStock = (TextView)v.findViewById(R.id.stock_idea_number_of_stock_purchased);
         int numberStock = mStock.getNumberStock();
@@ -281,7 +283,7 @@ public class StockFragment extends Fragment {
 
         mTotalStockPrice = (TextView) v.findViewById(R.id.stock_idea_total_purchase_price);
         mCurrentStockPrice = (TextView) v.findViewById(R.id.stock_idea_current_price);
-        mCurrentStockPrice.setText(String.valueOf(mStock.getCurrentPrice()));
+        mCurrentStockPrice.setText(formatter.format(mStock.getCurrentPrice()));
 
         mNumberStockLabel = (TextView)v.findViewById(R.id.stock_idea_number_of_stock_purchased_label);
         mTotalStockPriceLabel = (TextView)v.findViewById(R.id.stock_idea_total_purchase_price_label);
@@ -318,9 +320,9 @@ public class StockFragment extends Fragment {
                                 String purchaseDate = DateFormat.format(dateFormat, date)
                                         .toString();
                                 mStock.setPurchaseDate(purchaseDate);
-                                mTotalStockPrice.setText(String.valueOf(numberStock * mStock.getCurrentPrice()));
-                                mCurrentStockValue.setText(String.valueOf(numberStock * mStock.getCurrentPrice()));
-                                mCurrentStockPrice.setText(String.valueOf(mStock.getCurrentPrice()));
+                                mTotalStockPrice.setText(formatter.format(numberStock * mStock.getCurrentPrice()));
+                                mCurrentStockValue.setText(formatter.format(numberStock * mStock.getCurrentPrice()));
+                                mCurrentStockPrice.setText(formatter.format(mStock.getCurrentPrice()));
                                 mNumberStockLabel.setVisibility(View.VISIBLE);
                                 mNumberStock.setVisibility(View.VISIBLE);
                                 mTotalStockPriceLabel.setVisibility(View.VISIBLE);
@@ -355,39 +357,50 @@ public class StockFragment extends Fragment {
 
         if (numberStock <= 0)
         {
+            if(mStock.getTicker() != null){
+                Stock stock = stockFetcher.fetchStockPriceName(mStock.getTicker(), getContext());
+                mCurrentStockPrice.setText(formatter.format( stock.getCurrentPrice()));
+                mStock.setCurrentPrice(stock.getCurrentPrice());
+                mCurrentStockPriceLabel.setVisibility(View.VISIBLE);
+                mCurrentStockPrice.setVisibility(View.VISIBLE);
+            } else {
+
+                mCurrentStockPriceLabel.setVisibility(View.GONE);
+                mCurrentStockPrice.setVisibility(View.GONE);
+            }
             mProfitLoss.setVisibility(View.GONE);
             mNumberStockLabel.setVisibility(View.GONE);
             mNumberStock.setVisibility(View.GONE);
             mTotalStockPriceLabel.setVisibility(View.GONE);
             mTotalStockPrice.setVisibility(View.GONE);
-            mCurrentStockPriceLabel.setVisibility(View.GONE);
             mPurchaseDateLabel.setVisibility(View.GONE);
             mPurchaseDate.setVisibility(View.GONE);
-            mCurrentStockPrice.setVisibility(View.GONE);
             mCurrentStockValueLabel.setVisibility(View.GONE);
             mCurrentStockValue.setVisibility(View.GONE);
+            mPurchasePrice.setVisibility(View.GONE);
+            mPurchasePriceLabel.setVisibility(View.GONE);
             mPurchaseButton.setVisibility(View.VISIBLE);
         }
         else
         {
             mPurchaseButton.setVisibility(View.GONE);
             Double totalPurchasePrice = purchasePrice * numberStock;
-            mTotalStockPrice.setText(String.valueOf(totalPurchasePrice));
+            mTotalStockPrice.setText(formatter.format(totalPurchasePrice));
 
             if(mStock.getTicker() != null)
             {
                 Stock stock = stockFetcher.fetchStockPriceName(mStock.getTicker(), getContext());
-                mCurrentStockPrice.setText(String.valueOf( stock.getCurrentPrice()));
+                mCurrentStockPrice.setText(formatter.format( stock.getCurrentPrice()));
                 mStock.setCurrentPrice(stock.getCurrentPrice());
                 Double currentStockValue = stock.getCurrentPrice() * numberStock;
-                mCurrentStockValue.setText(String.valueOf(currentStockValue));
+                mCurrentStockValue.setText(formatter.format(currentStockValue));
                 mProfitLoss.setVisibility(View.VISIBLE);
                 if (currentStockValue - totalPurchasePrice >= 0)
                 {
-                    mProfitLoss.setText("This has made a profit of $" +String.valueOf(currentStockValue - totalPurchasePrice));
+                    mProfitLoss.setText("This has made a profit of " +formatter.format(currentStockValue - totalPurchasePrice));
                 }
                 else {
-                    mProfitLoss.setText("This has made a loss of $" +String.valueOf(currentStockValue - totalPurchasePrice));
+                    mProfitLoss.setText("This has made a loss of " +formatter.format(currentStockValue - totalPurchasePrice));
                 }
 
             }
@@ -443,4 +456,5 @@ public class StockFragment extends Fragment {
             mPhotoView.setImageBitmap(bitmap);
         }
     }
+
 }

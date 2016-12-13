@@ -11,6 +11,8 @@ import com.example.jmartin5229.stockideatracker.database.StockDBSchema;
 import com.example.jmartin5229.stockideatracker.database.StockDBSchema.StockIdeaTable;
 
 import java.io.File;
+import java.text.Format;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -24,6 +26,7 @@ import android.util.Log;
 
 public class StockApi {
     private static String TAG = "StockAPICheck";
+    NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
     private static StockApi sStockApi;
 
@@ -142,5 +145,38 @@ public class StockApi {
             return null;
         }
         return new File(externalFilesDir, stock.getNewPicture());
+    }
+
+    public String getReport(Context context){
+        StockFetcher stockFetcher = new StockFetcher();
+        String returnString = "";
+        Stock returnedStock = new Stock();
+        Double purchasedValueAccum = 0.0;
+        Double purchasedValue;
+        Double currentValueAccum = 0.0;
+        Double currentValue;
+        Double profitLoss;
+
+        List<Stock> stockList = GetStocks();
+        for (Stock stock: stockList)
+        {
+            if (stock.getNumberStock() > 0) {
+                returnedStock = stockFetcher.fetchStockPriceName(stock.getTicker(), context);
+                purchasedValue = stock.getPurchasePrice() * stock.getNumberStock();
+                currentValue = returnedStock.getCurrentPrice() * stock.getNumberStock();
+                purchasedValueAccum += purchasedValue;
+                currentValueAccum += currentValue;
+            }
+        }
+        returnString += "\n";
+        profitLoss = currentValueAccum - purchasedValueAccum;
+        returnString += "Total Cost of All Stocks =  " + formatter.format(currentValueAccum) + "\n";
+        returnString += "Total Value of All Stocks = " + formatter.format(purchasedValueAccum) + "\n";
+        if (profitLoss >= 0){
+            returnString += "Total profit of all stock if sold now is " + formatter.format(profitLoss); //String.valueOf(profitLoss);
+        }else {
+            returnString += "Total loss of all stock if sold now is " + formatter.format(profitLoss);
+        }
+        return returnString;
     }
 }
