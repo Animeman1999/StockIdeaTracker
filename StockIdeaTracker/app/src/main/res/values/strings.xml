@@ -6,7 +6,7 @@
     <string name="add_new_stock_idea">Add New Stock Idea</string>
     <string name="stock_idea_title_label">Name of Stock: </string>
     <string name="stock_idea_title">Texas Title</string>
-    <string name="stock_idea_ticker_label">Stock Symbol</string>
+    <string name="stock_idea_ticker_label">Stock Symbol: </string>
     <string name="stock_idea_ticker">TTT</string>
     <string name="stock_idea_creation_date_label">Date Stock Idea Added: </string>
     <string name="stock_idea_creation_date">11/11/2016</string>
@@ -30,4 +30,5 @@
     <string name="stock_purchase_date_label">Date Stock Purchased: </string>
     <string name="stock_purchase_date">12/11/2016</string>
     <string name="validate_symbol_button">Validates Stock Symbol</string>
+    <string name="profit_loss">yup</string>
 </resources>

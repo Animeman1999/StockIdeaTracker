@@ -16,6 +16,13 @@
         android:layout_below="@+id/stock_idea_ticker_label"
         android:text="@string/stock_idea_ticker"/>
 
+    <TextView
+        android:id="@+id/stock_idea_ticker_display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/stock_idea_ticker_label"
+        android:text="@string/stock_idea_ticker"/>
+
     <Button
         android:id="@+id/validate_symbol_button"
         android:layout_width="match_parent"
@@ -27,7 +34,7 @@
         android:id="@+id/stock_idea_title_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/stock_idea_ticker"
+        android:layout_below="@+id/stock_idea_ticker_label"
         android:text="@string/stock_idea_title_label"/>
 
     <TextView
@@ -35,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/stock_idea_title"
-        android:layout_below="@+id/stock_idea_ticker"
+        android:layout_below="@+id/stock_idea_ticker_label"
         android:layout_toRightOf="@+id/stock_idea_title_label"/>
 
     <TextView
@@ -178,6 +185,15 @@
         android:layout_below="@+id/stock_idea_current_price_label"
         android:layout_toRightOf="@+id/stock_idea_total_current_value_label"
         android:text="@string/stock_idea_total_current_value"/>
+
+    <TextView
+        android:id="@+id/profit_loss"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stock_idea_total_current_value"
+        android:layout_toRightOf="@+id/stock_idea_total_current_value_label"
+        android:text="@string/profit_loss"/>
+
     <Button
         android:id="@+id/stock_purchase_button"
         android:layout_width="match_parent"

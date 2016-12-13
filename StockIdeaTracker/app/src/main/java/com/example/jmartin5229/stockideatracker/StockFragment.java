@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
@@ -20,7 +19,6 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,23 +33,7 @@ import java.util.Date;
 import java.io.File;
 import java.util.UUID;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-
-import android.location.Location;
-
-import static android.content.Context.LOCATION_SERVICE;
 
 
 /**
@@ -76,6 +58,7 @@ public class StockFragment extends Fragment {
     private TextView mIdeaTitle;
     private TextView mIdeaTitleLable;
     private EditText mTicker;
+    private TextView mTickerDisplay;
     private TextView mDateAddedLabel;
     private TextView mDateAdded;
     private TextView mDescriptionLable;
@@ -99,6 +82,7 @@ public class StockFragment extends Fragment {
     private TextView mPurchaseDate;
     private Button mValidateSymbolButton;
     private String mUserInput;
+    private TextView mProfitLoss;
 
     private GoogleApiClient googleApiClient;
 
@@ -161,6 +145,8 @@ public class StockFragment extends Fragment {
         mIdeaTitle = (TextView) v.findViewById(R.id.stock_idea_title);
         mIdeaTitle.setText(mStock.getName());
 
+        mProfitLoss = (TextView)v.findViewById(R.id.profit_loss);
+
         final String mSmbol = mStock.getTicker();
         mTicker = (EditText) v.findViewById(R.id.stock_idea_ticker);
         mTicker.setText(mStock.getTicker());
@@ -177,7 +163,7 @@ public class StockFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                mUserInput = s.toString();
+                mUserInput = s.toString().trim();
 
             }
         });
@@ -193,9 +179,13 @@ public class StockFragment extends Fragment {
                         mValidateSymbolButton.setText(mUserInput + " is not a valid stock symbol. \n Validate stock Symbol");
                         mTicker.setText("");
                     }else {
+                        mStock.setTicker(mUserInput.toUpperCase());
+                        mTickerDisplay.setVisibility(View.VISIBLE);
+                        mTickerDisplay.setText(mStock.getTicker());
+                        mTicker.setVisibility(View.GONE);
                         mStock.setName(stock.getName());
                         mStock.setCurrentPrice(stock.getCurrentPrice());
-                        mPurchasePrice.setText(String.valueOf(mStock.getCurrentPrice()));
+                        mCurrentStockPrice.setText(String.valueOf(stock.getCurrentPrice()));
                         mIdeaTitle.setText(mStock.getName());
                         mValidateSymbolButton.setVisibility(View.GONE);
                         mPurchaseButton.setVisibility(View.VISIBLE);
@@ -291,6 +281,7 @@ public class StockFragment extends Fragment {
 
         mTotalStockPrice = (TextView) v.findViewById(R.id.stock_idea_total_purchase_price);
         mCurrentStockPrice = (TextView) v.findViewById(R.id.stock_idea_current_price);
+        mCurrentStockPrice.setText(String.valueOf(mStock.getCurrentPrice()));
 
         mNumberStockLabel = (TextView)v.findViewById(R.id.stock_idea_number_of_stock_purchased_label);
         mTotalStockPriceLabel = (TextView)v.findViewById(R.id.stock_idea_total_purchase_price_label);
@@ -318,6 +309,7 @@ public class StockFragment extends Fragment {
                             try {
                                 int numberStock = Integer.valueOf(mPurchaseText);
                                 mNumberStock.setText(mPurchaseText);
+                                mStock.setPurchasePrice(mStock.getCurrentPrice());
                                 mStock.setNumberStock(numberStock);
                                 Date date = new Date();
                                 //Declare a date format to use on the date
@@ -363,6 +355,7 @@ public class StockFragment extends Fragment {
 
         if (numberStock <= 0)
         {
+            mProfitLoss.setVisibility(View.GONE);
             mNumberStockLabel.setVisibility(View.GONE);
             mNumberStock.setVisibility(View.GONE);
             mTotalStockPriceLabel.setVisibility(View.GONE);
@@ -378,16 +371,34 @@ public class StockFragment extends Fragment {
         else
         {
             mPurchaseButton.setVisibility(View.GONE);
+            Double totalPurchasePrice = purchasePrice * numberStock;
+            mTotalStockPrice.setText(String.valueOf(totalPurchasePrice));
 
-            mTotalStockPrice.setText(String.valueOf(purchasePrice * numberStock));
+            if(mStock.getTicker() != null)
+            {
+                Stock stock = stockFetcher.fetchStockPriceName(mStock.getTicker(), getContext());
+                mCurrentStockPrice.setText(String.valueOf( stock.getCurrentPrice()));
+                mStock.setCurrentPrice(stock.getCurrentPrice());
+                Double currentStockValue = stock.getCurrentPrice() * numberStock;
+                mCurrentStockValue.setText(String.valueOf(currentStockValue));
+                mProfitLoss.setVisibility(View.VISIBLE);
+                if (currentStockValue - totalPurchasePrice >= 0)
+                {
+                    mProfitLoss.setText("This has made a profit of $" +String.valueOf(currentStockValue - totalPurchasePrice));
+                }
+                else {
+                    mProfitLoss.setText("This has made a loss of $" +String.valueOf(currentStockValue - totalPurchasePrice));
+                }
 
-            Double currentPrice = 1.11; //88888888888888888888888888Needs to be a method here to get the price from yahoo
-            mCurrentStockPrice.setText(String.valueOf(currentPrice));
+            }
 
-            mCurrentStockValue.setText(String.valueOf(currentPrice * numberStock));
+
+
         }
-
+        mTickerDisplay = (TextView)v.findViewById(R.id.stock_idea_ticker_display);
+        mTickerDisplay.setText(mStock.getTicker());
         if(mStock.getTicker() == null){
+            mTickerDisplay.setVisibility(View.GONE);
             mPurchaseButton.setVisibility(View.GONE);
             mIdeaTitle.setVisibility(View.GONE);
             mIdeaTitleLable.setVisibility(View.GONE);
@@ -400,6 +411,10 @@ public class StockFragment extends Fragment {
             mPurchasePrice.setVisibility(View.GONE);
             mDescriptionLable.setVisibility(View.GONE);
             mDescription.setVisibility(View.GONE);
+        } else {
+            mValidateSymbolButton.setVisibility(View.GONE);
+            mTicker.setVisibility(View.GONE);
+            mTickerDisplay.setVisibility(View.VISIBLE);
         }
 
         return v;
@@ -428,47 +443,4 @@ public class StockFragment extends Fragment {
             mPhotoView.setImageBitmap(bitmap);
         }
     }
-//    public void GetStockSymbol()
-//    {
-//
-//        Log.d("Test", "--------------------------Enter GetStockSymbol");
-//        mStockSymbol = "";
-//        final Context context = this;
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("Enter the stock symbol.");
-//
-//        final EditText input = new EditText(this);
-//        builder.setView(input);
-//
-//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                mStockSymbol = input.getText().toString();
-//                response = true;
-//                if(mStockSymbol != "") {
-//                    String UUIDString = stockFetcher.fetchStockPriceName(mStockSymbol, context);
-//                    if ( UUIDString == ""){
-//                        Toast.makeText(context, mStockSymbol + "Not a valid stock symbol", Toast.LENGTH_LONG);
-//                        input.setText("");
-//                    }else {
-//                        input.setText(UUIDString);
-//                    };
-//                }
-//            }
-//        });
-//        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                response = true;
-//                dialog.cancel();
-//            }
-//        });
-//
-//        builder.show();
-//
-//
-//        Log.d("Test", "--------------------------Exiting GetStockSymbol string being returned = " + mStockSymbol);
-//
-//
-//    }
 }
