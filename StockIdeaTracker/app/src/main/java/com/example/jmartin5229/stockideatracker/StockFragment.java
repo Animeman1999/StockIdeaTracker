@@ -237,16 +237,16 @@ public class StockFragment extends Fragment {
         //Needs to be initialized so not null when mPhotView is used in updatePhotoView();
         mPhotoView = (ImageView)v.findViewById(R.id.stock_idea_thumbnail);
 
-        updatePhotoView();
+
         if (canTakePhoto)
         {
             Uri uri = Uri.fromFile(mPhotoFile);
             captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         }
+        updatePhotoView();
         mPhotoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity mainActivity = new MainActivity();
                 startActivityForResult(captureImage, REQUEST_PHOTO);
 
 

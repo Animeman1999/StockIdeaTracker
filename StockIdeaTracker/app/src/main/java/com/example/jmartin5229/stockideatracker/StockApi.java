@@ -142,7 +142,7 @@ public class StockApi {
     public File getPhotoFile(Stock stock){
         File externalFilesDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         if (externalFilesDir == null){
-            return null;
+            externalFilesDir.mkdirs();
         }
         return new File(externalFilesDir, stock.getNewPicture());
     }
