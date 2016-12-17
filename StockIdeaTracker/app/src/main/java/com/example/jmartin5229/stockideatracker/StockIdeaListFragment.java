@@ -1,5 +1,6 @@
 package com.example.jmartin5229.stockideatracker;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.Image;
@@ -7,8 +8,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +24,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by ccunn on 03-Dec-16.
@@ -31,11 +36,20 @@ public class StockIdeaListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private StockIdeaAdapter mAdapter;
     private File mPhotoFile;
+    private String subtitle = "";
+    public static final String STOCK_IDEA_LIST_FRAGMENT_KEY = "com.example.jmartin5229.stockideatracker.bundle.key";
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            subtitle = (String) getArguments().getSerializable(STOCK_IDEA_LIST_FRAGMENT_KEY);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(subtitle);
+        }catch (Exception e){
+
+        }
+
     }
 
     @Nullable
@@ -145,8 +159,29 @@ public class StockIdeaListFragment extends Fragment {
 
 
     private void updateUI() {
+        String subtitle = String.valueOf (((AppCompatActivity)getActivity()).getSupportActionBar().getSubtitle());
         StockApi stockApi = StockApi.get(getActivity());
-        List<Stock> stockIdeaList = stockApi.GetStocks();
+        Log.d ("TEXT", ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> subtitle" + subtitle);
+        List<Stock> stockIdeaList;
+        switch (subtitle)
+        {
+            case "Sort by Ticker Symbol":
+                stockIdeaList = stockApi.GetStocksByTicker("ticker");
+                break;
+            case "Sort by Name":
+                stockIdeaList = stockApi.GetStocksByTicker("name");
+                break;
+            case "Sort by Date":
+                stockIdeaList = stockApi.GetStocksByTicker("creation_date");
+                break;
+            case "Sort by GPS":
+                stockIdeaList = stockApi.GetStocksByTicker("coordinates") ;
+                break;
+            default:
+                stockIdeaList = stockApi.GetStocks();
+                break;
+        }
+
 
         if (mAdapter == null) {
             // >Create a new adapter and give it the list of ideas.

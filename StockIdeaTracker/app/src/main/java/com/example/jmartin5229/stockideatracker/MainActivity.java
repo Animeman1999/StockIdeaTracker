@@ -17,6 +17,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -40,7 +41,7 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
-    private int mSubtitleVisible = 1;
+    private int mSubtitleVisible = 0;
     private static String TAG = "MainError";
     private Context mContext;
     private LocationListener locationListener;
@@ -160,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 //                return true;
 //        }
 
-        updateSubtitle();
+
         return true;
     }
 
@@ -190,28 +191,34 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        Log.d("TEST", "YYYYYYYYYYYYYYYYYYYYYYYYYY id = " + id + " R.id.sort_by_ticker = " + R.id.sort_by_ticker );
 
         //noinspection SimplifiableIfStatement
         switch (id) {
-//            case R.id.list_of_stock_ideas:
-//                mSubtitleVisible = 1;
-//                updateSubtitle();
-//                break;
-            case R.id.add_new_stock_idea:
+            case R.id.sort_by_ticker:
+                mSubtitleVisible = 1;
+                updateSubtitle();
+                break;
+            case R.id.sort_by_name:
                 mSubtitleVisible = 2;
                 updateSubtitle();
-
+                break;
+            case R.id.sort_by_date:
+                mSubtitleVisible = 3;
+                updateSubtitle();
+                break;
+            case R.id.sort_by_gps:
+                mSubtitleVisible = 4;
+                updateSubtitle();
+                break;
+            case R.id.add_new_stock_idea:
                 Stock stock = new Stock();
                 if (stock.getCoordinates() == null) {
                     stock.setCoordinates(mGPSCoordinates);
                 }
                 StockApi.get(this).AddStock(stock);
-
                 Intent intent = StockActivity.newIntent(this,stock.getUUID());
-
                 startActivity(intent);
-
-
                 break;
             case R.id.portfolio_summary:
                 showMessage("Summary Report", StockApi.get(this).getReport(this));
@@ -224,21 +231,48 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateSubtitle() {
 
-        String subtitle = getString(R.string.list_of_stock_ideas);
+        String subtitle = "";
         switch (mSubtitleVisible) {
             case 1:
-                subtitle = getString(R.string.list_of_stock_ideas);
+                subtitle = getString(R.string.sort_by_ticker);
                 break;
             case 2:
-                subtitle = getString(R.string.add_new_stock_idea);
+                subtitle = getString(R.string.sort_by_name);
 
                 break;
             case 3:
-                subtitle = getString(R.string.portfolio_summary);
+                subtitle = getString(R.string.sort_by_date);
+                break;
+            case 4:
+                subtitle = getString(R.string.sort_by_gps);
+                break;
+            default:
+                subtitle = "";
                 break;
         }
         AppCompatActivity activity = (AppCompatActivity) this;
         activity.getSupportActionBar().setSubtitle(subtitle);
+
+
+        StockIdeaListFragment frag = ((StockIdeaListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container));
+
+        Bundle arg = new Bundle();
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.detach(frag);
+        ft.commit();
+        
+        // >Get the fragment manager from the activity.
+        FragmentManager fm = getSupportFragmentManager();
+        arg.putString(StockIdeaListFragment.STOCK_IDEA_LIST_FRAGMENT_KEY,subtitle);
+
+
+        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+        fragment = new StockIdeaListFragment();
+        fragment.setArguments(arg);
+
+        fm.beginTransaction().add(R.id.fragment_container, fragment).commit();
+
+
     }
 
 

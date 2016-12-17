@@ -125,9 +125,9 @@ public class StockApi {
         return values;
     }
 
-    public List<Stock> GetStocksByTicker(){
+    public List<Stock> GetStocksByTicker(String sortyBy){
         List<Stock> stocks = new ArrayList<>();
-        StockCursorWrapper cursorWrapper = QueryCrimes(null, null, "ticker");
+        StockCursorWrapper cursorWrapper = QueryCrimes(null, null, sortyBy);
 
         try {
             cursorWrapper.moveToFirst();

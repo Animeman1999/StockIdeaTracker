@@ -37,4 +37,8 @@
     <string name="total_value_of_all_stocks_label">Total Value of All Stock : $</string>
     <string name="total_value_of_all_stocks">30.12</string>
     <string name="total_profit_loss_of_all_stocks_label">Total Profit/Loss of the stocks</string>
+    <string name="sort_by_ticker">Sort by Ticker Symbol</string>
+    <string name="sort_by_name">Sort by Name</string>
+    <string name="sort_by_date">Sort by Date</string>
+    <string name="sort_by_gps">Sort by GPS</string>
 </resources>
