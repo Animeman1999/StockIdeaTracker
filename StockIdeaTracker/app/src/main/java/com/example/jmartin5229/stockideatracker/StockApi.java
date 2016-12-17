@@ -125,6 +125,22 @@ public class StockApi {
         return values;
     }
 
+    public List<Stock> GetStocksByTicker(){
+        List<Stock> stocks = new ArrayList<>();
+        StockCursorWrapper cursorWrapper = QueryCrimes(null, null, "ticker");
+
+        try {
+            cursorWrapper.moveToFirst();
+            while (!cursorWrapper.isAfterLast()){
+                stocks.add(cursorWrapper.getStock());
+                cursorWrapper.moveToNext();
+            }
+        }finally {
+            cursorWrapper.close();
+        }
+        return stocks;
+    }
+
     public StockCursorWrapper QueryCrimes(String whereClause, String[] whereArgs, String orderBy){
         Cursor cursor = mDatabase.query(
                 StockIdeaTable.NAME,
@@ -170,8 +186,8 @@ public class StockApi {
         }
         returnString += "\n";
         profitLoss = currentValueAccum - purchasedValueAccum;
-        returnString += "Total Cost of All Stocks =  " + formatter.format(currentValueAccum) + "\n";
-        returnString += "Total Value of All Stocks = " + formatter.format(purchasedValueAccum) + "\n";
+        returnString += "Total Cost of All Stocks =  " + formatter.format(purchasedValueAccum) + "\n";
+        returnString += "Total Value of All Stocks = " + formatter.format(currentValueAccum) + "\n";
         if (profitLoss >= 0){
             returnString += "Total profit of all stock if sold now is " + formatter.format(profitLoss); //String.valueOf(profitLoss);
         }else {
