@@ -3,43 +3,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.jmartin5229.stockideatracker.MainActivity">
 
-    <item
-        android:id="@+id/sort_by_ticker"
-        android:orderInCategory="20"
-        android:title="Sort by Ticker"
-        app:showAsAction="never"/>
+    <group android:id="@+id/group1"
+        >
 
-    <item
-        android:id="@+id/sort_by_name"
-        android:orderInCategory="30"
-        android:title="Sort by Name"
-        app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/sort_by_date"
-        android:orderInCategory="40"
-        android:title="Sort by Date"
-        app:showAsAction="never"/>
+        <item
+            android:id="@+id/sort_by_ticker"
+            android:orderInCategory="20"
+            android:title="Sort by Ticker"
+            app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/sort_by_gps"
-        android:orderInCategory="50"
-        android:title="Sort by GPS"
-        app:showAsAction="never"/>
+        <item
+            android:id="@+id/sort_by_name"
+            android:orderInCategory="30"
+            android:title="Sort by Name"
+            app:showAsAction="never"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/background_dark"/>
+        <item
+            android:id="@+id/sort_by_date"
+            android:orderInCategory="40"
+            android:title="Sort by Date"
+            app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/add_new_stock_idea"
-        android:orderInCategory="200"
-        android:title="@string/add_new_stock_idea"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/portfolio_summary"
-        android:orderInCategory="300"
-        android:title="@string/portfolio_summary"
-        app:showAsAction="never" />
+        <item
+            android:id="@+id/sort_by_gps"
+            android:orderInCategory="50"
+            android:title="Sort by GPS"
+            app:showAsAction="never"/>
+
+    </group>
+
+    <group android:id="@+id/group2" >
+        <item
+            android:id="@+id/add_new_stock_idea"
+            android:orderInCategory="200"
+            android:title="@string/add_new_stock_idea"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/portfolio_summary"
+            android:orderInCategory="300"
+            android:title="@string/portfolio_summary"
+            app:showAsAction="never" />
+    </group>
 </menu>

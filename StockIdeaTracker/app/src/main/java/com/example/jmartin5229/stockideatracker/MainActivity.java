@@ -146,22 +146,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-//        MenuItem subtitleItem =
-//                menu.findItem(R.id.menu_item_show_subtitle);
-//        switch (mSubtitleVisible)
-//        {
-//            case 1:
-//            subtitleItem.setTitle(R.string.list_of_stock_ideas);
-//                return true;
-//            case 2:
-//            subtitleItem.setTitle(R.string.add_new_stock_idea);
-//                return true;
-//            case 3:
-//                subtitleItem.setTitle(R.string.portfolio_summary);
-//                return true;
-//        }
-
-
         return true;
     }
 
@@ -260,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.detach(frag);
         ft.commit();
-        
+
         // >Get the fragment manager from the activity.
         FragmentManager fm = getSupportFragmentManager();
         arg.putString(StockIdeaListFragment.STOCK_IDEA_LIST_FRAGMENT_KEY,subtitle);

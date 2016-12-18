@@ -55,6 +55,25 @@ public class StockApi {
         mDatabase.insert(StockIdeaTable.NAME, null, values);
     }
 
+    public void DeleteStock(String uuid)
+    {
+        Log.d(TAG, "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV uuid sent in " +  uuid );
+        if (mDatabase != null) {
+            Log.d(TAG, "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV  database found");
+            mDatabase.delete(StockIdeaTable.NAME, StockIdeaTable.Cols.UUID + " = \"" + uuid + "\"", null);
+        }else{
+            Log.d(TAG, "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV NOOOOOO database found");
+            mDatabase = new StockBaseHelper(mContext).getWritableDatabase();
+            mDatabase.delete(StockIdeaTable.NAME, StockIdeaTable.Cols.UUID + " = " + uuid, null);
+
+        }
+    }
+    public void DeleteStockByTicker(String ticker)
+    {
+        Log.d(TAG, "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV uuid sent in " +  ticker );
+        mDatabase.delete(StockIdeaTable.NAME, StockIdeaTable.Cols.TICKER + " = " + ticker, null);
+    }
+
     public List<Stock> GetStocks(){
         List<Stock> stocks = new ArrayList<>();
         StockCursorWrapper cursorWrapper = QueryCrimes(null, null, null);

@@ -14,11 +14,13 @@ import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,7 @@ import java.util.UUID;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 
+
 /**
  * Created by Jeff on 12/2/2016.
  */
@@ -44,7 +47,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 public class StockFragment extends Fragment {
     private static final String ARG_STOCK_ID = "stock_id";
     private static final String DIALOG_DATE = "DialogDate";
-    private StockApi mStockApi;
 
     final Intent pickStock = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
     private static final int REQUEST_DATE = 0;
@@ -84,6 +86,10 @@ public class StockFragment extends Fragment {
     private Button mValidateSymbolButton;
     private String mUserInput;
     private TextView mProfitLoss;
+    private Button mDeleteButton;
+    private Button mDeleteConfirmButton;
+    private Button mDeleteCancelButton;
+    private Boolean mDeleteThisStock = false;
 
     private GoogleApiClient googleApiClient;
 
@@ -112,8 +118,6 @@ public class StockFragment extends Fragment {
         //Log.d("Test", "666666666666666666666666666 StockFragment.java OnCreate - mStock.getPurchaseDate() = " + mStock.getPurchaseDate() + "66666666666666666666666666666");
         mPhotoFile = StockApi.get(getActivity()).getPhotoFile(mStock);
         mContext = getContext();
-
-
        }
 
 
@@ -167,6 +171,39 @@ public class StockFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 mUserInput = s.toString().trim();
 
+            }
+        });
+        mDeleteConfirmButton = (Button)v.findViewById(R.id.stock_delete_confirm_button);
+        mDeleteConfirmButton.setVisibility(View.GONE);
+        mDeleteConfirmButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                StockApi.get(getActivity()).DeleteStock(String.valueOf(mStock.getUUID()));
+                //********************************************************************
+                mDeleteThisStock = true;
+                getActivity().finish();
+            }
+        });
+
+        mDeleteCancelButton = (Button)v.findViewById(R.id.stock_cancel_button);
+        mDeleteCancelButton.setVisibility(View.GONE);
+        mDeleteCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDeleteCancelButton.setVisibility(View.GONE);
+                mDeleteConfirmButton.setVisibility(View.GONE);
+                mDeleteButton.setVisibility(View.VISIBLE);
+            }
+        });
+
+        mDeleteButton = (Button)v.findViewById(R.id.stock_delete_button);
+        mDeleteButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                mDeleteCancelButton.setVisibility(View.VISIBLE);
+                mDeleteConfirmButton.setVisibility(View.VISIBLE);
+                mDeleteButton.setVisibility(View.GONE);
             }
         });
 
@@ -248,21 +285,6 @@ public class StockFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivityForResult(captureImage, REQUEST_PHOTO);
-
-
-
-
-               // mStock.setCoordinates();
-               // mGPS.setText();
-                //******************************get a picture from the camera
-                //                               save picture into drawable folder
-                //                               save picture name to database
-                //                               setImageResource to view of new picture
-                //                               get GPS
-                //                               save GPS to database
-                //                               update mGPS.setText
-                //mPhotoView = (ImageView)v.findViewById(R.id.stock_idea_thumbnail);
-
                 updatePhotoView();
             }
 
@@ -334,6 +356,7 @@ public class StockFragment extends Fragment {
                                 mCurrentStockValueLabel.setVisibility(View.VISIBLE);
                                 mCurrentStockValue.setVisibility(View.VISIBLE);
                                 mPurchaseButton.setVisibility(View.GONE);
+                             //   mDeleteButton.setVisibility(View.VISIBLE);
                             } catch (Exception e)
                             {
                                 Toast.makeText(getActivity(), R.string.bad_input, Toast.LENGTH_SHORT).show();
@@ -364,9 +387,11 @@ public class StockFragment extends Fragment {
                 mCurrentStockPriceLabel.setVisibility(View.VISIBLE);
                 mCurrentStockPrice.setVisibility(View.VISIBLE);
             } else {
-
                 mCurrentStockPriceLabel.setVisibility(View.GONE);
                 mCurrentStockPrice.setVisibility(View.GONE);
+
+
+
             }
             mProfitLoss.setVisibility(View.GONE);
             mNumberStockLabel.setVisibility(View.GONE);
@@ -380,12 +405,15 @@ public class StockFragment extends Fragment {
             mPurchasePrice.setVisibility(View.GONE);
             mPurchasePriceLabel.setVisibility(View.GONE);
             mPurchaseButton.setVisibility(View.VISIBLE);
+            mDeleteButton.setVisibility(View.VISIBLE);
+
         }
         else
         {
             mPurchaseButton.setVisibility(View.GONE);
             Double totalPurchasePrice = purchasePrice * numberStock;
             mTotalStockPrice.setText(formatter.format(totalPurchasePrice));
+            mDeleteButton.setVisibility(View.GONE);
 
             if(mStock.getTicker() != null)
             {
@@ -443,7 +471,11 @@ public class StockFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        StockApi.get(getActivity()).UpdateStock(mStock);
+        if (!mDeleteThisStock){
+            StockApi.get(getActivity()).UpdateStock(mStock);
+        }
+        Log.d("TEST", "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV Stock was NOT updated");
+
     }
     static final int REQUEST_IMAGE_CAPTURE = 1;
 

@@ -41,4 +41,7 @@
     <string name="sort_by_name">Sort by Name</string>
     <string name="sort_by_date">Sort by Date</string>
     <string name="sort_by_gps">Sort by GPS</string>
+    <string name="stock_delete_button">Delete this stock</string>
+    <string name="stock_delete_confirm_button">Confirm Deletion of this stock idea.</string>
+    <string name="stock_cancel_button">Cancel Deletion of this stock idea</string>
 </resources>
