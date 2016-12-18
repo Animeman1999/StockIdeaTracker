@@ -132,6 +132,8 @@ public class StockApi {
         values.put(StockIdeaTable.Cols.COORDINATES, stock.getCoordinates());
         values.put(StockIdeaTable.Cols.PURCHASE_PRICE, stock.getPurchasePrice());
         values.put(StockIdeaTable.Cols.NUMBER_STOCK, stock.getNumberStock());
+        values.put(StockIdeaTable.Cols.SOLD_PRICE_PER_STOCK, stock.getSoldPrice());
+        values.put(StockIdeaTable.Cols.SOLD_DATE, stock.getSoldDate());
         if (stock.getPurchaseDate() == null)
         {
             values.put(StockIdeaTable.Cols.PURCHASE_DATE, "");
@@ -191,26 +193,34 @@ public class StockApi {
         Double currentValueAccum = 0.0;
         Double currentValue;
         Double profitLoss;
+        Double soldValueAccum = 0.0;
 
         List<Stock> stockList = GetStocks();
         for (Stock stock: stockList)
         {
             if (stock.getNumberStock() > 0) {
-                returnedStock = stockFetcher.fetchStockPriceName(stock.getTicker(), context);
-                purchasedValue = stock.getPurchasePrice() * stock.getNumberStock();
-                currentValue = returnedStock.getCurrentPrice() * stock.getNumberStock();
-                purchasedValueAccum += purchasedValue;
-                currentValueAccum += currentValue;
+                if (stock.getSoldPrice() > 0){
+                    soldValueAccum += stock.getSoldPrice() * stock.getNumberStock();
+                    purchasedValueAccum += stock.getSoldPrice() * stock.getNumberStock();
+                }else {
+                    returnedStock = stockFetcher.fetchStockPriceName(stock.getTicker(), context);
+                    purchasedValue = stock.getPurchasePrice() * stock.getNumberStock();
+                    currentValue = returnedStock.getCurrentPrice() * stock.getNumberStock();
+                    purchasedValueAccum += purchasedValue;
+                    currentValueAccum += currentValue;
+                }
             }
         }
         returnString += "\n";
-        profitLoss = currentValueAccum - purchasedValueAccum;
+        profitLoss = currentValueAccum + soldValueAccum - purchasedValueAccum;
+        returnString += "Value All Stocks Sold = " + formatter.format(soldValueAccum) + "\n";
+        returnString += "Value All Stocks Owned = " + formatter.format(currentValueAccum) + "\n\n";
+        returnString += "Value All Socks Sold and Owned = " + formatter.format(purchasedValueAccum + soldValueAccum) + "\n\n";
         returnString += "Total Cost of All Stocks =  " + formatter.format(purchasedValueAccum) + "\n";
-        returnString += "Total Value of All Stocks = " + formatter.format(currentValueAccum) + "\n";
         if (profitLoss >= 0){
-            returnString += "Total profit of all stock if sold now is " + formatter.format(profitLoss); //String.valueOf(profitLoss);
+            returnString += "Total profit if all stock sold now is " + formatter.format(profitLoss); //String.valueOf(profitLoss);
         }else {
-            returnString += "Total loss of all stock if sold now is " + formatter.format(profitLoss);
+            returnString += "Total loss if all stock sold now is " + formatter.format(profitLoss);
         }
         return returnString;
     }

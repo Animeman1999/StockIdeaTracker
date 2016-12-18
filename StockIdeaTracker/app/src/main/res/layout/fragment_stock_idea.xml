@@ -200,12 +200,54 @@
         android:layout_toRightOf="@+id/stock_idea_total_current_value_label"
         android:text="@string/profit_loss"/>
 
+    <TextView
+        android:id="@+id/stock_sold_date_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profit_loss"
+        android:text="@string/stock_sold_date_label"/>
+
+    <TextView
+        android:id="@+id/stock_sold_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/stock_sold_date_label"
+        android:layout_below="@+id/profit_loss"
+        android:text="@string/stock_sold_date"/>
+
     <Button
-        android:id="@+id/stock_purchase_button"
+    android:id="@+id/stock_purchase_button"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/profit_loss"
+    android:text="@string/stock_purchase_button"/>
+
+    <Button
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:id="@+id/stock_sell_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/stock_idea_current_price_label"
-        android:text="@string/stock_purchase_button"/>
+        android:layout_below="@+id/profit_loss"
+        android:text="@string/stock_sell_button"/>
+
+    <Button
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:id="@+id/stock_sell_confirm_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profit_loss"
+        android:text="@string/stock_sell_confirm_button"/>
+
+    <Button
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:id="@+id/stock_sell_cancel_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stock_sell_confirm_button"
+        android:text="@string/stock_sell_cancel_button"/>
 
     <Button
         android:layout_marginTop="6dp"
@@ -213,7 +255,7 @@
         android:id="@+id/stock_delete_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profit_loss"
+        android:layout_below="@+id/stock_purchase_button"
         android:text="@string/stock_delete_button"/>
     <Button
         android:layout_marginTop="6dp"

@@ -38,7 +38,9 @@ public class StockBaseHelper extends SQLiteOpenHelper {
                 StockIdeaTable.Cols.COORDINATES + ", " +
                 StockIdeaTable.Cols.PURCHASE_PRICE + ", " +
                 StockIdeaTable.Cols.NUMBER_STOCK + ", " +
-                StockIdeaTable.Cols.PURCHASE_DATE +
+                StockIdeaTable.Cols.PURCHASE_DATE + ", " +
+                StockIdeaTable.Cols.SOLD_PRICE_PER_STOCK + ", " +
+                StockIdeaTable.Cols.SOLD_DATE +
                 ")"
         );
     }

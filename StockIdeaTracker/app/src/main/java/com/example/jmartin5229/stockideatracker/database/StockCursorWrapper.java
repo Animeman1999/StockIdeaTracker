@@ -33,6 +33,8 @@ public class StockCursorWrapper extends CursorWrapper {
         double  purchasePrice = getDouble(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.PURCHASE_PRICE));
         int numberStock = getInt(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.NUMBER_STOCK));
         String purchaseDate = (getString(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.PURCHASE_DATE)));
+        Double soldPrice = getDouble(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.SOLD_PRICE_PER_STOCK));
+        String soldDate = getString(getColumnIndex(StockDBSchema.StockIdeaTable.Cols.SOLD_DATE));
 
         Log.d("Test", "^^^^^^^^^^^^^^^^^^^^^^^^StockCursorWrapper - creationDate = " + creationDate + "^^^^^^^^^^^^^^^^^^^^^^^");
         Stock stock = new Stock(uuid);
@@ -45,6 +47,8 @@ public class StockCursorWrapper extends CursorWrapper {
         stock.setPurchasePrice(purchasePrice);
         stock.setNumberStock(numberStock);
         stock.setPurchaseDate(purchaseDate);
+        stock.setSoldDate(soldDate);
+        stock.setSoldPrice(soldPrice);
         Log.d("Test", "^^^^^^^^^^^^^^^^^^^^^^^^^^^StockCursorWrapper - stock.getPurchaseDate(new Date(purchaseDate)) = " + stock.getPurchaseDate().toString()+ "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
 

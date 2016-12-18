@@ -24,6 +24,24 @@ public class Stock {
     private double  mPurchasePrice;
     private int mNumberStock;
     private String mPurchaseDate;
+    private double mSoldPrice;
+    private String mSoldDate;
+
+    public double getSoldPrice() {
+        return mSoldPrice;
+    }
+
+    public void setSoldPrice(double soldPrice) {
+        mSoldPrice = soldPrice;
+    }
+
+    public String getSoldDate() {
+        return mSoldDate;
+    }
+
+    public void setSoldDate(String soldDate) {
+        mSoldDate = soldDate;
+    }
 
     public UUID getUUID() {
         return mUUID;
@@ -133,21 +151,6 @@ public class Stock {
         //Log.d("Check","#######################public Stock (UUID id){\n" +
         //        "        mUUID = id;\n" +
         //        "        mCreationDate = new Date();" + date +  " mCreationDate " + mCreationDate + " ############################");
-    }
-
-
-    public Stock(UUID uuid, String Name, String ticker, String CreationDate, String Description, String Picture,
-                 String Coordiantes, double PurchasePrice, int NumberStock, String PurchaseDate){
-        mUUID = uuid;
-        mName = Name;
-        mTicker = ticker;
-        mCreationDate = CreationDate;
-        mDescription = Description;
-        mPicture = Picture;
-        mCoordinates = Coordiantes;
-        mPurchasePrice = PurchasePrice;
-        mNumberStock = NumberStock;
-        mPurchaseDate = PurchaseDate;
     }
 
 }

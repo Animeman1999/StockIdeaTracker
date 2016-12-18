@@ -90,6 +90,12 @@ public class StockFragment extends Fragment {
     private Button mDeleteConfirmButton;
     private Button mDeleteCancelButton;
     private Boolean mDeleteThisStock = false;
+    private Button mSellStockButton;
+    private Button mSellConfimrButton;
+    private Button mSellCancelButton;
+    private TextView mStockSoldDateLabel;
+    private TextView mStockSoldDate;
+
 
     private GoogleApiClient googleApiClient;
 
@@ -126,7 +132,6 @@ public class StockFragment extends Fragment {
         switch (requestCode){
             case 10:
                 if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-
                 }
                 return;
         }
@@ -142,8 +147,6 @@ public class StockFragment extends Fragment {
 
         boolean canTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager) != null;
 
-
-
         if(packageManager.resolveActivity(pickStock,PackageManager.MATCH_DEFAULT_ONLY)== null){
 
         }
@@ -152,6 +155,8 @@ public class StockFragment extends Fragment {
         mIdeaTitle.setText(mStock.getName());
 
         mProfitLoss = (TextView)v.findViewById(R.id.profit_loss);
+        mStockSoldDate = (TextView)v.findViewById(R.id.stock_sold_date);
+        mStockSoldDateLabel = (TextView)v.findViewById(R.id.stock_sold_date_label);
 
         final String mSmbol = mStock.getTicker();
         mTicker = (EditText) v.findViewById(R.id.stock_idea_ticker);
@@ -159,18 +164,15 @@ public class StockFragment extends Fragment {
         mTicker.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 mUserInput = s.toString().trim();
-
             }
         });
         mDeleteConfirmButton = (Button)v.findViewById(R.id.stock_delete_confirm_button);
@@ -204,6 +206,62 @@ public class StockFragment extends Fragment {
                 mDeleteCancelButton.setVisibility(View.VISIBLE);
                 mDeleteConfirmButton.setVisibility(View.VISIBLE);
                 mDeleteButton.setVisibility(View.GONE);
+            }
+        });
+
+        mSellConfimrButton = (Button)v.findViewById(R.id.stock_sell_confirm_button);
+        mSellConfimrButton.setVisibility(View.GONE);
+        mSellConfimrButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mStock.setSoldPrice(mStock.getCurrentPrice());
+                Log.d("Test", "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMmmmmmmmmmmmmmmmmm  mStock.getSoldPrice() = " + mStock.getSoldPrice());
+                Date date = new Date();
+                //Declare a date format to use on the date
+                String dateFormat = "yyyy MMM dd hh:mm";
+                //Get a string version of the data formated by the date format
+                String soldDate = DateFormat.format(dateFormat, date)
+                        .toString();
+                mStock.setSoldDate(soldDate);
+                mSellConfimrButton.setVisibility(View.GONE);
+                mSellCancelButton.setVisibility(View.GONE);
+                Integer numberStock = mStock.getNumberStock();
+                mCurrentStockPriceLabel.setText("Price per stock was sold for: ");
+                double soldPrice = mStock.getSoldPrice();
+                mCurrentStockPrice.setText(String.valueOf(soldPrice ));
+                mCurrentStockValueLabel.setText("Total of all stocks was sold for: ");
+                double soldTotalValue = soldPrice * numberStock;
+                mCurrentStockValue.setText(String.valueOf(soldTotalValue));
+                double purchasePrice = mStock.getPurchasePrice();
+                double totalPurchasePrice = purchasePrice * numberStock;
+                if (soldTotalValue - totalPurchasePrice >= 0)
+                {
+                    mProfitLoss.setText("This has made a profit of " +formatter.format(soldTotalValue - totalPurchasePrice));
+                }
+                else {
+                    mProfitLoss.setText("This has made a loss of " +formatter.format(soldTotalValue - totalPurchasePrice));
+                }
+            }
+        });
+
+        mSellCancelButton = (Button)v.findViewById(R.id.stock_sell_cancel_button);
+        mSellCancelButton.setVisibility(View.GONE);
+        mSellCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSellStockButton.setVisibility(View.VISIBLE);
+                mSellCancelButton.setVisibility(View.GONE);
+                mSellConfimrButton.setVisibility(View.GONE);
+            }
+        });
+
+        mSellStockButton = (Button)v.findViewById(R.id.stock_sell_button);
+        mSellStockButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSellStockButton.setVisibility(View.GONE);
+                mSellCancelButton.setVisibility(View.VISIBLE);
+                mSellConfimrButton.setVisibility(View.VISIBLE);
             }
         });
 
@@ -372,11 +430,8 @@ public class StockFragment extends Fragment {
                 });
 
                 builder.show();
-
-
             }
         });
-
 
         if (numberStock <= 0)
         {
@@ -389,9 +444,6 @@ public class StockFragment extends Fragment {
             } else {
                 mCurrentStockPriceLabel.setVisibility(View.GONE);
                 mCurrentStockPrice.setVisibility(View.GONE);
-
-
-
             }
             mProfitLoss.setVisibility(View.GONE);
             mNumberStockLabel.setVisibility(View.GONE);
@@ -406,6 +458,7 @@ public class StockFragment extends Fragment {
             mPurchasePriceLabel.setVisibility(View.GONE);
             mPurchaseButton.setVisibility(View.VISIBLE);
             mDeleteButton.setVisibility(View.VISIBLE);
+            mSellStockButton.setVisibility(View.GONE);
 
         }
         else
@@ -414,6 +467,7 @@ public class StockFragment extends Fragment {
             Double totalPurchasePrice = purchasePrice * numberStock;
             mTotalStockPrice.setText(formatter.format(totalPurchasePrice));
             mDeleteButton.setVisibility(View.GONE);
+            mSellStockButton.setVisibility(View.VISIBLE);
 
             if(mStock.getTicker() != null)
             {
@@ -425,17 +479,38 @@ public class StockFragment extends Fragment {
                 mProfitLoss.setVisibility(View.VISIBLE);
                 if (currentStockValue - totalPurchasePrice >= 0)
                 {
-                    mProfitLoss.setText("This has made a profit of " +formatter.format(currentStockValue - totalPurchasePrice));
+                    mProfitLoss.setText("This could make a profit of " +formatter.format(currentStockValue - totalPurchasePrice) + " if sold now.");
                 }
                 else {
-                    mProfitLoss.setText("This has made a loss of " +formatter.format(currentStockValue - totalPurchasePrice));
+                    mProfitLoss.setText("This could make a loss of " +formatter.format(currentStockValue - totalPurchasePrice) + " if sold now.");
                 }
-
             }
-
-
-
         }
+        Log.d("Text", "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm mStock.getSoldPrice()" + mStock.getSoldPrice());
+        if(mStock.getSoldPrice() > 0 ){
+            mStockSoldDate.setText(mStock.getSoldDate());
+            mStockSoldDate.setVisibility(View.VISIBLE);
+            mStockSoldDateLabel.setVisibility(View.VISIBLE);
+            Double totalPurchasePrice = purchasePrice * numberStock;
+            mSellStockButton.setVisibility(View.GONE);
+            mCurrentStockPriceLabel.setText("Price per stock was sold for: ");
+            double soldPrice = mStock.getSoldPrice();
+            mCurrentStockPrice.setText(String.valueOf(soldPrice ));
+            mCurrentStockValueLabel.setText("Total of all stocks was sold for: ");
+            double soldTotalValue = soldPrice * numberStock;
+            mCurrentStockValue.setText(String.valueOf(soldTotalValue));
+            if (soldTotalValue - totalPurchasePrice >= 0)
+            {
+                mProfitLoss.setText("This has made a profit of " +formatter.format(soldTotalValue - totalPurchasePrice));
+            }
+            else {
+                mProfitLoss.setText("This has made a loss of " +formatter.format(soldTotalValue - totalPurchasePrice));
+            }
+        }else {
+            mStockSoldDate.setVisibility(View.GONE);
+            mStockSoldDateLabel.setVisibility(View.GONE);
+        }
+
         mTickerDisplay = (TextView)v.findViewById(R.id.stock_idea_ticker_display);
         mTickerDisplay.setText(mStock.getTicker());
         if(mStock.getTicker() == null){

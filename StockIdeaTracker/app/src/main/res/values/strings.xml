@@ -44,4 +44,9 @@
     <string name="stock_delete_button">Delete this stock</string>
     <string name="stock_delete_confirm_button">Confirm Deletion of this stock idea.</string>
     <string name="stock_cancel_button">Cancel Deletion of this stock idea</string>
+    <string name="stock_sell_button">Sell the Stocks</string>
+    <string name="stock_sell_confirm_button">Confirm Selling the Stocks</string>
+    <string name="stock_sell_cancel_button">Cancel Selling the Stocks</string>
+    <string name="stock_sold_date_label">Date stock was sold: </string>
+    <string name="stock_sold_date"></string>
 </resources>

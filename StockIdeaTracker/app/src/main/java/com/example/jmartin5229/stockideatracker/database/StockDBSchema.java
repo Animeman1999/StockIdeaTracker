@@ -18,6 +18,8 @@ public class StockDBSchema {
             public static final String PURCHASE_PRICE = "purchase_price";
             public static final String NUMBER_STOCK = "number_stock";
             public static final String PURCHASE_DATE = "purchase_date";
+            public static final String SOLD_PRICE_PER_STOCK = "sold_price_per_stock";
+            public static final String SOLD_DATE ="sold_date";
         }
     }
 }
