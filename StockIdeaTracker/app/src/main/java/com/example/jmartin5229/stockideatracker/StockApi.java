@@ -188,7 +188,7 @@ public class StockApi {
         StockFetcher stockFetcher = new StockFetcher();
         String returnString = "";
         Stock returnedStock = new Stock();
-        Double purchasedValueAccum = 0.0;
+        Double purchasedPriceAccum = 0.0;
         Double purchasedValue;
         Double currentValueAccum = 0.0;
         Double currentValue;
@@ -201,22 +201,22 @@ public class StockApi {
             if (stock.getNumberStock() > 0) {
                 if (stock.getSoldPrice() > 0){
                     soldValueAccum += stock.getSoldPrice() * stock.getNumberStock();
-                    purchasedValueAccum += stock.getSoldPrice() * stock.getNumberStock();
+                    purchasedPriceAccum += stock.getSoldPrice() * stock.getNumberStock();
                 }else {
                     returnedStock = stockFetcher.fetchStockPriceName(stock.getTicker(), context);
                     purchasedValue = stock.getPurchasePrice() * stock.getNumberStock();
                     currentValue = returnedStock.getCurrentPrice() * stock.getNumberStock();
-                    purchasedValueAccum += purchasedValue;
+                    purchasedPriceAccum += purchasedValue;
                     currentValueAccum += currentValue;
                 }
             }
         }
         returnString += "\n";
-        profitLoss = currentValueAccum + soldValueAccum - purchasedValueAccum;
+        profitLoss = currentValueAccum + soldValueAccum - purchasedPriceAccum;
         returnString += "Value All Stocks Sold = " + formatter.format(soldValueAccum) + "\n";
         returnString += "Value All Stocks Owned = " + formatter.format(currentValueAccum) + "\n\n";
-        returnString += "Value All Socks Sold and Owned = " + formatter.format(purchasedValueAccum + soldValueAccum) + "\n\n";
-        returnString += "Total Cost of All Stocks =  " + formatter.format(purchasedValueAccum) + "\n";
+        returnString += "Value All Socks Sold and Owned = " + formatter.format(purchasedPriceAccum) + "\n\n";
+        returnString += "Total Cost of All Stocks =  " + formatter.format(purchasedPriceAccum) + "\n";
         if (profitLoss >= 0){
             returnString += "Total profit if all stock sold now is " + formatter.format(profitLoss); //String.valueOf(profitLoss);
         }else {
