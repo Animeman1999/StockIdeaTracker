@@ -228,10 +228,10 @@ public class StockFragment extends Fragment {
                 Integer numberStock = mStock.getNumberStock();
                 mCurrentStockPriceLabel.setText("Price per stock was sold for: ");
                 double soldPrice = mStock.getSoldPrice();
-                mCurrentStockPrice.setText(String.valueOf(soldPrice ));
-                mCurrentStockValueLabel.setText("Total of all stocks was sold for: ");
+                mCurrentStockPrice.setText((formatter.format(soldPrice )));
+                mCurrentStockValueLabel.setText("Total value stocks sold for: ");
                 double soldTotalValue = soldPrice * numberStock;
-                mCurrentStockValue.setText(String.valueOf(soldTotalValue));
+                mCurrentStockValue.setText((formatter.format(soldTotalValue)));
                 double purchasePrice = mStock.getPurchasePrice();
                 double totalPurchasePrice = purchasePrice * numberStock;
                 if (soldTotalValue - totalPurchasePrice >= 0)
@@ -495,10 +495,10 @@ public class StockFragment extends Fragment {
             mSellStockButton.setVisibility(View.GONE);
             mCurrentStockPriceLabel.setText("Price per stock was sold for: ");
             double soldPrice = mStock.getSoldPrice();
-            mCurrentStockPrice.setText(String.valueOf(soldPrice ));
+            mCurrentStockPrice.setText(formatter.format(soldPrice ));
             mCurrentStockValueLabel.setText("Total of all stocks was sold for: ");
             double soldTotalValue = soldPrice * numberStock;
-            mCurrentStockValue.setText(String.valueOf(soldTotalValue));
+            mCurrentStockValue.setText(formatter.format(soldTotalValue));
             if (soldTotalValue - totalPurchasePrice >= 0)
             {
                 mProfitLoss.setText("This has made a profit of " +formatter.format(soldTotalValue - totalPurchasePrice));
